@@ -180,30 +180,25 @@ $('#table_nivel_riesgo tbody').on( 'click', 'editNivel', function(event){
     document.getElementById("form_nivel_riesgo").reset();
     document.getElementById("add_nivel_riesgo").style.display = "none";
     document.getElementById("update_nivel_riesgo").style.display = "block";
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showNivelRiesgo/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            document.getElementById("id_nivel_riesgo").value=event.currentTarget.getAttribute('data-id');
-            $('#modal_nivel_riesgo #operador_1').val(respuesta.data[0].operador1)
-            $('#modal_nivel_riesgo #valor_1').val(respuesta.data[0].valor1)
-            $('#modal_nivel_riesgo #operador_2').val(respuesta.data[0].operador2)
-            $('#modal_nivel_riesgo #valor_2').val(respuesta.data[0].valor2)
-            $('#modal_nivel_riesgo #color').val(respuesta.data[0].color)
-            $('#modal_nivel_riesgo #estado').val(respuesta.data[0].estado)
-            $('#modal_nivel_riesgo #descripcion').val(respuesta.data[0].descripcion)
-            $('#modal_nivel_riesgo #comentario').val(respuesta.data[0].comentario)
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
+
+    var table = $('#table_nivel_riesgo').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+
+    if(regNum == '0'){
+
+    }else{
+        document.getElementById("id_nivel_riesgo").value=event.currentTarget.getAttribute('data-id');
+        $('#modal_nivel_riesgo #operador_1').val(regDat[0]["operador1"])
+        $('#modal_nivel_riesgo #valor_1').val(regDat[0]["valor1"])
+        $('#modal_nivel_riesgo #operador_2').val(regDat[0]["operador2"])
+        $('#modal_nivel_riesgo #valor_2').val(regDat[0]["valor2"])
+        $('#modal_nivel_riesgo #color').val(regDat[0]["color"])
+        $('#modal_nivel_riesgo #estado').val(regDat[0]["estado"])
+        $('#modal_nivel_riesgo #descripcion').val(regDat[0]["descripcion"])
+        $('#modal_nivel_riesgo #comentario').val(regDat[0]["comentario"])
+    }
+
 });
 
 $('#table_nivel_riesgo tbody').on( 'click', 'deleteNivel', function(event){
@@ -219,14 +214,14 @@ $('#table_nivel_riesgo tbody').on( 'click', 'deleteNivel', function(event){
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                method: "DELETE",
+                method: "POST",
                 url: BASE_URL+"/main/deleteNivelRiesgo/"+Number(id),
                 dataType: "JSON"
             })
             .done(function(respuesta) {
                 if (respuesta) 
                 {
-                    alerta_tipo_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    alerta_nivel_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
                     'Se ha eliminado satisfactoriamente'+
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
                         '<span aria-hidden="true">&times;</span>'+

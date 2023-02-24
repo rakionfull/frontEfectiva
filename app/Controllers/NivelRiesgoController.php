@@ -33,9 +33,13 @@ class NivelRiesgoController extends BaseController
             if (!$this->request->getPost()) {
                 return redirect()->to(base_url('/riesgos'));
             } else {
+                
                 $post_endpoint = '/api/addNivelRiesgo';
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_added'] = $this->session->id;
+                $request_data['date_add'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 // var_dump($response);die();
                 if ($response->msg) {
@@ -56,6 +60,9 @@ class NivelRiesgoController extends BaseController
                 $post_endpoint = '/api/updateNivelRiesgo/' . $id;
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_updated'] = $this->session->id;
+                $request_data['date_modify'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 if ($response->msg) {
                     echo json_encode($response->msg);
@@ -70,7 +77,10 @@ class NivelRiesgoController extends BaseController
     {
         if ($this->session->logged_in) {
             $post_endpoint = '/api/deleteNivelRiesgo/' . $id;
-            $response = (perform_http_request('DELETE', REST_API_URL . $post_endpoint, []));
+            $currentDate = date("Y-m-d H:i:s");
+            $request_data['id_user_deleted'] = $this->session->id;
+            $request_data['date_deleted'] = $currentDate;
+            $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
             if ($response->msg) {
                 echo json_encode($response->msg);
             } else {

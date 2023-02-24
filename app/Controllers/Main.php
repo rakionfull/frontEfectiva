@@ -940,28 +940,7 @@ class Main extends BaseController {
 
       }
       public function riesgos(){
-        $count_scene_1 = 0;
         if($this->session->logged_in){
-          $get_endpoint = '/api/getProbabilidadRiesgo/1';
-          $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
-          if($response){
-            $count_scene_1 = count($response->data);
-          }
-          $get_endpoint = '/api/getProbabilidadRiesgo/2';
-          $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
-          if($response){
-            $count_scene_2 = count($response->data);
-          }
-          $get_endpoint = '/api/getImpactoRiesgo/1';
-          $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
-          if($response){
-            $count_scene_1_impacto = count($response->data);
-          }
-          $get_endpoint = '/api/getImpactoRiesgo/2';
-          $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
-          if($response){
-            $count_scene_2_impacto = count($response->data);
-          }
           $get_endpoint = '/api/getTiposAmenaza';
           $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
           if($response){
@@ -969,10 +948,7 @@ class Main extends BaseController {
           }
         }
         return view('parametrizacion/riesgos',[
-          'count_scene_1' => $count_scene_1,
-          'count_scene_2' => $count_scene_2,
-          'count_scene_1_impacto' => $count_scene_1_impacto,
-          'count_scene_2_impacto' => $count_scene_2_impacto,
+          'escenario' => $this->session->escenario,
           'tipos_amenaza' => $tipo_amenaza
         ]);
       } 

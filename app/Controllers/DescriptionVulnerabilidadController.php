@@ -16,16 +16,6 @@ class DescriptionVulnerabilidadController extends BaseController
             }
         }
     }
-    public function showDescVulnerabilidad($id)
-    {
-        if ($this->session->logged_in) {
-            $get_endpoint = '/api/showDescVulnerabilidad/' . $id;
-            $response = perform_http_request('GET', REST_API_URL . $get_endpoint, []);
-            if ($response) {
-                echo json_encode($response);
-            }
-        }
-    }
 
     public function addDescVulnerabilidad()
     {
@@ -36,6 +26,9 @@ class DescriptionVulnerabilidadController extends BaseController
                 $post_endpoint = '/api/addDescVulnerabilidad';
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_added'] = $this->session->id;
+                $request_data['date_add'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 // var_dump($response);die();
                 if ($response->msg) {
@@ -56,6 +49,9 @@ class DescriptionVulnerabilidadController extends BaseController
                 $post_endpoint = '/api/updateDescVulnerabilidad/' . $id;
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_updated'] = $this->session->id;
+                $request_data['date_modify'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 if ($response->msg) {
                     echo json_encode($response->msg);
@@ -70,7 +66,10 @@ class DescriptionVulnerabilidadController extends BaseController
     {
         if ($this->session->logged_in) {
             $post_endpoint = '/api/deleteDescVulnerabilidad/' . $id;
-            $response = (perform_http_request('DELETE', REST_API_URL . $post_endpoint, []));
+            $currentDate = date("Y-m-d H:i:s");
+            $request_data['id_user_deleted'] = $this->session->id;
+            $request_data['date_deleted'] = $currentDate;
+            $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
             if ($response->msg) {
                 echo json_encode($response->msg);
             } else {

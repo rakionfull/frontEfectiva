@@ -156,25 +156,18 @@ $('#table_tipo_amenaza tbody').on( 'click', 'editAmenaza', function(event){
     document.getElementById("form_tipo_amenaza").reset();
     document.getElementById("add_tipo_amenaza").style.display = "none";
     document.getElementById("update_tipo_amenaza").style.display = "block";
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showTipoAmenaza/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            $("#modal_tipo_amenaza").modal("show");
-            document.getElementById("id_tipo_amenaza").value=event.currentTarget.getAttribute('data-id');
-            $('#modal_tipo_amenaza #tipo').val(respuesta.data[0].tipo)
-            $('#modal_tipo_amenaza #estado').val(respuesta.data[0].estado)
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
+
+    var table = $('#table_tipo_amenaza').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+    if(regNum == '0'){
+    }else{
+        $("#modal_tipo_amenaza").modal("show");
+        document.getElementById("id_tipo_amenaza").value=event.currentTarget.getAttribute('data-id');
+        $('#modal_tipo_amenaza #tipo').val(regDat[0]['tipo'])
+        $('#modal_tipo_amenaza #estado').val(regDat[0]['estado'])
+    }
+
 });
 
 $('#table_tipo_amenaza tbody').on( 'click', 'deleteAmenaza', function(event){

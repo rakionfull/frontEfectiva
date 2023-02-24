@@ -74,17 +74,11 @@
                             <div class="col-md-4">
                                 <h4 class="card-title">Lista de Probabilidad de riesgo</h4>
                             </div>
-                            <div class="col-12" style="margin-top:0.5rem" id="alerta_probabilidad_riesgo">
+                            <div class="col-md-4 offset-md-4">
+                                <button type="button" id="btn_add_probabilidad_1" class="float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
+                                <button style="display:none;" type="button" id="btn_add_probabilidad_2" class="float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="pl-2">
-                                <?php
-                                    if($count_scene_1 < 1){
-                                        echo '<button type="button" id="btn_add_probabilidad_riesgo_escenario_1" class="float-right btn waves-effect waves-light btn-outline-primary"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Agregar</button>';
-                                    }
-                                ?>
-                                <button style="display: none;" type="button" id="btn_add_probabilidad_riesgo_escenario_2" class="float-right btn waves-effect waves-light btn-outline-primary"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Agregar</button>
+                            <div class="col-12" style="margin-top:0.5rem" id="alerta_probabilidad_riesgo">
                             </div>
                         </div>
                         <?php 
@@ -94,37 +88,27 @@
                             echo $session->getFlashdata('error');;
                             }
                         ?>
-                        <div class="row pl-2 flex-column mt-4">
-                            <ul class="nav nav-tabs nav-escenario" id="myTab" role="tablist">
-                                <?php
-                                    if($count_scene_1 >= 1){
-                                        $style_1 = 'block';
-                                        $style_2 = 'none';
-                                    }else{
-                                        $style_1 = 'none';
-                                        $style_2 = 'block';
-                                    }
-                                ?>
-                                <li class="nav-item" role="presentation" >
-                                    <button style="display:<?php echo $style_1;?>" class="nav-link active" id="escenario-1-tab" data-bs-toggle="tab" data-bs-target="#escenario-1-tab-pane" type="button" role="tab" aria-controls="escenario-1-tab-pane" aria-selected="true">Escenario 1</button>
+                        <div class="row d-block">
+                            <ul class="nav nav-tabs" id="myTabEscenariosProbabilidad" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="probabilidad-1-tab" data-bs-toggle="tab" data-bs-target="#probabilidad-1-tab-pane" type="button" role="tab" aria-controls="probabilidad-1-tab-pane" aria-selected="true">Escenario 1</button>
                                 </li>
-                                <li class="nav-item" role="presentation"  >
-                                    <button style="display:<?php echo $style_2;?>" class="nav-link active" id="escenario-2-tab" data-bs-toggle="tab" data-bs-target="#escenario-2-tab-pane" type="button" role="tab" aria-controls="escenario-2-tab-pane" aria-selected="true">Escenario 2</button>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="probabilidad-2-tab" data-bs-toggle="tab" data-bs-target="#probabilidad-2-tab-pane" type="button" role="tab" aria-controls="probabilidad-2-tab-pane" aria-selected="true">Escenario 2</button>
                                 </li>
-                                
                             </ul>
-                            <div class="tab-content mt-4" id="myTabContent" style="overflow: auto;width: 100%;">
-                                <div class="tab-pane fade" id="escenario-1-tab-pane" role="tabpanel" aria-labelledby="escenario-1-tab" tabindex="0">
+                            <div class="tab-content" id="myTabEscenariosProbabilidadContent">
+                                <div class="tab-pane fade show active" id="probabilidad-1-tab-pane" role="tabpanel" aria-labelledby="probabilidad-1-tab" tabindex="0">
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table id="table_probabilidad_riesgo_1" class="table table-centered table-bordered datatable dt-responsive nowrap table_probabilidad_riesgo_1" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <table id="table_probabilidad_1" class="table table-centered table-bordered datatable dt-responsive nowrap" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead class="thead-light">
                                                     <tr>
                                                         <th>ID</th>                                                         
                                                         <th>Descripción</th>
-                                                        <th>Tipo de regla</th>
-                                                        <th>Tipo de valor</th>
-                                                        <th>Fórmula</th>
+                                                        <th>Tipo de Regla</th>
+                                                        <th>Formula</th>
+                                                        <th>Tipo de Valor</th>
                                                         <th>Comentario</th>
                                                         <th>Estado</th>
                                                         <th style="width: 120px;">Mantenimiento</th>
@@ -136,17 +120,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="escenario-2-tab-pane" role="tabpanel" aria-labelledby="escenario-2-tab" tabindex="0">
+                                <div class="tab-pane fade" id="probabilidad-2-tab-pane" role="tabpanel" aria-labelledby="probabilidad-2-tab" tabindex="0">
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table id="table_probabilidad_riesgo_2" class="table table-centered table-bordered datatable dt-responsive nowrap table_probabilidad_riesgo_2" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <table id="table_probabilidad_2" class="table table-centered table-bordered datatable dt-responsive nowrap" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead class="thead-light">
                                                     <tr>
                                                         <th>ID</th>                                                         
                                                         <th>Descripción</th>
-                                                        <th>Tipo de regla</th>
-                                                        <th>Tipo de valor</th>
-                                                        <th>Fórmula</th>
+                                                        <th>Tipo de Regla</th>
+                                                        <th>Tipo de Valor</th>
                                                         <th>Operador 1</th>
                                                         <th>Valor 1</th>
                                                         <th>Operador 2</th>
@@ -165,7 +148,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
             <div id="apartImpactoRiesgo" class="opcion" style="display:none">
@@ -175,17 +157,11 @@
                             <div class="col-md-4">
                                 <h4 class="card-title">Lista de Impacto de riesgo</h4>
                             </div>
-                            <div class="col-12" style="margin-top:0.5rem" id="alerta_impacto_riesgo">
+                            <div class="col-md-4 offset-md-4">
+                                <button type="button" id="btn_add_impacto_1" class="float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
+                                <button style="display:none;" type="button" id="btn_add_impacto_2" class="float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="pl-2">
-                                <?php
-                                    if($count_scene_1_impacto < 1){
-                                        echo '<button type="button" id="btn_add_impacto_riesgo_escenario_1" class="float-right btn waves-effect waves-light btn-outline-primary"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Agregar</button>';
-                                    }
-                                ?>
-                                <button style="display: none;" type="button" id="btn_add_impacto_riesgo_escenario_2" class="float-right btn waves-effect waves-light btn-outline-primary"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Agregar</button>
+                            <div class="col-12" style="margin-top:0.5rem" id="alerta_impacto_riesgo">
                             </div>
                         </div>
                         <?php 
@@ -195,37 +171,27 @@
                             echo $session->getFlashdata('error');;
                             }
                         ?>
-                        <div class="row pl-2 flex-column mt-4">
-                            <ul class="nav nav-tabs nav-escenario" id="myTab" role="tablist">
-                                <?php
-                                    if($count_scene_1_impacto >= 1){
-                                        $style_1 = 'block';
-                                        $style_2 = 'none';
-                                    }else{
-                                        $style_1 = 'none';
-                                        $style_2 = 'block';
-                                    }
-                                ?>
-                                <li class="nav-item" role="presentation" >
-                                    <button style="display:<?php echo $style_1;?>" class="nav-link active" id="escenario-1-tab" data-bs-toggle="tab" data-bs-target="#escenario-1-tab-pane" type="button" role="tab" aria-controls="escenario-1-tab-pane" aria-selected="true">Escenario 1</button>
+                        <div class="row d-block">
+                            <ul class="nav nav-tabs" id="myTabEscenariosImpacto" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="impacto-1-tab" data-bs-toggle="tab" data-bs-target="#impacto-1-tab-pane" type="button" role="tab" aria-controls="impacto-1-tab-pane" aria-selected="true">Escenario 1</button>
                                 </li>
-                                <li class="nav-item" role="presentation"  >
-                                    <button style="display:<?php echo $style_2;?>" class="nav-link active" id="escenario-2-tab" data-bs-toggle="tab" data-bs-target="#escenario-2-tab-pane" type="button" role="tab" aria-controls="escenario-2-tab-pane" aria-selected="true">Escenario 2</button>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="impacto-2-tab" data-bs-toggle="tab" data-bs-target="#impacto-2-tab-pane" type="button" role="tab" aria-controls="impacto-2-tab-pane" aria-selected="true">Escenario 2</button>
                                 </li>
-                                
                             </ul>
-                            <div class="tab-content mt-4" id="myTabContent" style="overflow: auto;width: 100%;">
-                                <div class="tab-pane fade" id="escenario-1-tab-pane" role="tabpanel" aria-labelledby="escenario-1-tab" tabindex="0">
+                            <div class="tab-content" id="myTabEscenariosImpactoContent">
+                                <div class="tab-pane fade show active" id="impacto-1-tab-pane" role="tabpanel" aria-labelledby="impacto-1-tab" tabindex="0">
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table id="table_impacto_riesgo_1" class="table table-centered table-bordered datatable dt-responsive nowrap table_impacto_riesgo_1" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <table id="table_impacto_1" class="table table-centered table-bordered datatable dt-responsive nowrap" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead class="thead-light">
                                                     <tr>
                                                         <th>ID</th>                                                         
                                                         <th>Descripción</th>
-                                                        <th>Tipo de regla</th>
-                                                        <th>Tipo de valor</th>
-                                                        <th>Fórmula</th>
+                                                        <th>Tipo de Regla</th>
+                                                        <th>Formula</th>
+                                                        <th>Tipo de Valor</th>
                                                         <th>Comentario</th>
                                                         <th>Estado</th>
                                                         <th style="width: 120px;">Mantenimiento</th>
@@ -237,17 +203,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="escenario-2-tab-pane" role="tabpanel" aria-labelledby="escenario-2-tab" tabindex="0">
+                                <div class="tab-pane fade" id="impacto-2-tab-pane" role="tabpanel" aria-labelledby="impacto-2-tab" tabindex="0">
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table id="table_impacto_riesgo_2" class="table table-centered table-bordered datatable dt-responsive nowrap table_impacto_riesgo_2" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <table id="table_impacto_2" class="table table-centered table-bordered datatable dt-responsive nowrap" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead class="thead-light">
                                                     <tr>
                                                         <th>ID</th>                                                         
                                                         <th>Descripción</th>
-                                                        <th>Tipo de regla</th>
-                                                        <th>Tipo de valor</th>
-                                                        <th>Fórmula</th>
+                                                        <th>Tipo de Regla</th>
+                                                        <th>Tipo de Valor</th>
                                                         <th>Operador 1</th>
                                                         <th>Valor 1</th>
                                                         <th>Operador 2</th>
@@ -266,7 +231,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
             <div id="apartNivelRiesgo" class="opcion" style="display:none">
@@ -489,13 +453,13 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <span>Riesgo: </span>
-                                            <input type="text" class="form-control form-control-sm" id="input_tipo_riesgo" onKeyPress="return soloLetra(event);">
+                                            <input type="text" class="form-control form-control-sm" id="input_tipo_riesgo">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <span>Descripción: </span>
-                                            <textarea type="text" class="form-control form-control-sm" id="descripcion" onKeyPress="return soloLetra(event);"></textarea>
+                                            <textarea type="text" class="form-control form-control-sm" id="descripcion"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -542,22 +506,21 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Descripción: </span>
-                                        <input required id="descripcion_1" type="text" class="form-control form-control-sm">
+                                        <input required id="descripcion" type="text" class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Tipo de regla: </span>
-                                        <select required name="" id="tipo_regla_1" class="form-control form-control-sm">
+                                        <select required name="" id="tipo_regla" class="form-control form-control-sm">
                                             <option value="1 Valor">1 Valor</option>
-                                            <option value="2 Valores">2 Valores</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Tipo de Valor: </span>
-                                        <select required name="" id="tipo_valor_1" class="form-control form-control-sm">
+                                        <select required name="" id="tipo_valor" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
                                             <option value="Numero">Número</option>
                                             <option value="Formula">Fórmula</option>
@@ -567,61 +530,23 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Estado: </span>
-                                        <select required name="" id="estado_1" class="form-control form-control-sm">
+                                        <select required name="" id="estado" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
                                             <option value="1">Activo</option>
                                             <option value="2">Inactivo</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6 escene_2">
-                                    <div class="form-group">
-                                        <span>Operador 1: </span>
-                                        <select required name="" id="operador_1" class="form-control form-control-sm">
-                                            <option value="">Seleccione</option>
-                                            <option value="=">=</option>
-                                            <option value=">">></option>
-                                            <option value=">=">>=</option>
-                                            <option value="<"><</option>
-                                            <option value="<="><=</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-6 escene_2">
-                                    <div class="form-group">
-                                        <span>Valor 1: </span>
-                                        <input type="text" required id="valor_1" class="form-control form-control-sm">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-6 escene_2">
-                                    <div class="form-group">
-                                        <span>Operador 2: </span>
-                                        <select required name="" id="operador_2" class="form-control form-control-sm">
-                                            <option value="">Seleccione</option>
-                                            <option value="=">=</option>
-                                            <option value=">">></option>
-                                            <option value=">=">>=</option>
-                                            <option value="<"><</option>
-                                            <option value="<="><=</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-6 escene_2">
-                                    <div class="form-group">
-                                        <span>Valor 2: </span>
-                                        <input type="text" id="valor_2" required class="form-control form-control-sm">
-                                    </div>
-                                </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <span>Comentario: </span>
-                                        <textarea required type="text" class="form-control form-control-sm" id="comentario_1"></textarea>
+                                        <textarea required type="text" class="form-control form-control-sm" id="comentario"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 formula_1_probabilidad" style="display: none;">
                                     <div class="form-group">
                                         <span>Formula: </span>
-                                        <textarea required type="text" class="form-control form-control-sm" id="formula_1"></textarea>
+                                        <textarea type="text" class="form-control form-control-sm" id="formula"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -637,33 +562,31 @@
         </div>
     </div>
     <!-- END MODAL CREAR PROBABILIDAD RIESGO 1 -->
-
-    <!-- MODAL CREATE IMPACTO RIESGO ESCENARIO 1 -->
-    <div class="modal fade" id="modal_impacto_riesgo_escenario_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- MODAL CREATE PROBABILIDAD RIESGO ESCENARIO 2 -->
+    <div class="modal fade" id="modal_probabilidad_riesgo_escenario_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="title_prob_riesgo_esc_1"></h5>
+                    <h5 class="modal-title" id="title_prob_riesgo_esc_2"></h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="form_impacto_riesgo_escenario_1" class="in-line">
-                        <input type="hidden" id="id_impacto_riesgo">
+                    <form id="form_probabilidad_riesgo_escenario_2" class="in-line">
+                        <input type="hidden" id="id_probabilidad_riesgo">
                         <div class="col-12-lg">
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Descripción: </span>
-                                        <input required id="descripcion_1" type="text" class="form-control form-control-sm">
+                                        <input required id="descripcion" type="text" class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Tipo de regla: </span>
-                                        <select required name="" id="tipo_regla_1" class="form-control form-control-sm">
-                                            <option value="1 Valor">1 Valor</option>
+                                        <select required name="" id="tipo_regla" class="form-control form-control-sm">
                                             <option value="2 Valores">2 Valores</option>
                                         </select>
                                     </div>
@@ -671,24 +594,23 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Tipo de Valor: </span>
-                                        <select required name="" id="tipo_valor_1" class="form-control form-control-sm">
+                                        <select required name="" id="tipo_valor" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
                                             <option value="Numero">Número</option>
-                                            <option value="Formula">Fórmula</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Estado: </span>
-                                        <select required name="" id="estado_1" class="form-control form-control-sm">
+                                        <select required name="" id="estado" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
                                             <option value="1">Activo</option>
                                             <option value="2">Inactivo</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6 escene_2">
+                                <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Operador 1: </span>
                                         <select required name="" id="operador_1" class="form-control form-control-sm">
@@ -701,13 +623,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6 escene_2">
+                                <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 1: </span>
                                         <input type="text" required id="valor_1" class="form-control form-control-sm">
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6 escene_2">
+                                <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Operador 2: </span>
                                         <select required name="" id="operador_2" class="form-control form-control-sm">
@@ -720,7 +642,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6 escene_2">
+                                <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 2: </span>
                                         <input type="text" id="valor_2" required class="form-control form-control-sm">
@@ -729,13 +651,82 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <span>Comentario: </span>
-                                        <textarea required type="text" class="form-control form-control-sm" id="comentario_1"></textarea>
+                                        <textarea required type="text" class="form-control form-control-sm" id="comentario"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-12 formula_1" style="display: none;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="add_probabilidad_riego_escenario_2">Agregar</button>
+                    <button type="button" class="btn btn-primary" id="update_probabilidad_riego_escenario_2">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL CREAR PROBABILIDAD RIESGO 2 -->
+
+    <!-- MODAL CREATE IMPACTO RIESGO 1 -->
+    <div class="modal fade" id="modal_impacto_riesgo_escenario_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="title_impacto_riesgo_esc_1"></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form_impacto_riesgo_escenario_1" class="in-line">
+                        <input type="hidden" id="id_impacto_riesgo">
+                        <div class="col-12-lg">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Descripción: </span>
+                                        <input required id="descripcion" type="text" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Tipo de regla: </span>
+                                        <select required name="" id="tipo_regla" class="form-control form-control-sm">
+                                            <option value="1 Valor">1 Valor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Tipo de Valor: </span>
+                                        <select required name="" id="tipo_valor" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="Numero">Número</option>
+                                            <option value="Formula">Fórmula</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Estado: </span>
+                                        <select required name="" id="estado" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="1">Activo</option>
+                                            <option value="2">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <span>Comentario: </span>
+                                        <textarea required type="text" class="form-control form-control-sm" id="comentario"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 formula_1_probabilidad" style="display: none;">
                                     <div class="form-group">
                                         <span>Formula: </span>
-                                        <textarea required type="text" class="form-control form-control-sm" id="formula_1"></textarea>
+                                        <textarea type="text" class="form-control form-control-sm" id="formula"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -751,6 +742,111 @@
         </div>
     </div>
     <!-- END MODAL CREAR IMPACTO RIESGO 1 -->
+     <!-- MODAL CREATE IMPACTO RIESGO ESCENARIO 2 -->
+     <div class="modal fade" id="modal_impacto_riesgo_escenario_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="title_impacto_riesgo_esc_2"></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form_impacto_riesgo_escenario_2" class="in-line">
+                        <input type="hidden" id="id_impacto_riesgo">
+                        <div class="col-12-lg">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Descripción: </span>
+                                        <input required id="descripcion" type="text" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Tipo de regla: </span>
+                                        <select required name="" id="tipo_regla" class="form-control form-control-sm">
+                                            <option value="2 Valores">2 Valores</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Tipo de Valor: </span>
+                                        <select required name="" id="tipo_valor" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="Numero">Número</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <span>Estado: </span>
+                                        <select required name="" id="estado" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="1">Activo</option>
+                                            <option value="2">Inactivo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="form-group">
+                                        <span>Operador 1: </span>
+                                        <select required name="" id="operador_1" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="=">=</option>
+                                            <option value=">">></option>
+                                            <option value=">=">>=</option>
+                                            <option value="<"><</option>
+                                            <option value="<="><=</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="form-group">
+                                        <span>Valor 1: </span>
+                                        <input type="text" required id="valor_1" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="form-group">
+                                        <span>Operador 2: </span>
+                                        <select required name="" id="operador_2" class="form-control form-control-sm">
+                                            <option value="">Seleccione</option>
+                                            <option value="=">=</option>
+                                            <option value=">">></option>
+                                            <option value=">=">>=</option>
+                                            <option value="<"><</option>
+                                            <option value="<="><=</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="form-group">
+                                        <span>Valor 2: </span>
+                                        <input type="text" id="valor_2" required class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <span>Comentario: </span>
+                                        <textarea required type="text" class="form-control form-control-sm" id="comentario"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="add_impacto_riego_escenario_2">Agregar</button>
+                    <button type="button" class="btn btn-primary" id="update_impacto_riego_escenario_2">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL CREAR IMPACTO RIESGO 2 -->
     <!-- MODAL CREATE NIVEL RIESGO -->
     <div class="modal fade" id="modal_nivel_riesgo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog modal-lg" role="document">
@@ -1028,10 +1124,7 @@
     </div>
     <!-- END MODAL CREAR DESC RIESGO -->
     <script type="text/javascript">
-        var count = <?php echo json_encode($count_scene_1); ?>;
-        var count_2 = <?php echo json_encode($count_scene_2); ?>;
-        var count_impacto = <?php echo json_encode($count_scene_1_impacto); ?>;
-        var count_2_impacto = <?php echo json_encode($count_scene_2_impacto); ?>;
+        var escenario = <?php echo json_encode($escenario); ?>;
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
     <script src="<?=base_url('public/assets/js/riesgos/activos.js'); ?>"></script>

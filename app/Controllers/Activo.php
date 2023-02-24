@@ -175,9 +175,9 @@ class Activo extends BaseController {
          
            
         }
-        public function getAreasEmpresa(){
+        public function getAreasEmpresa($id){
           if($this->session->logged_in){
-            $get_endpoint = '/api/getAreasEmpresa';
+            $get_endpoint = '/api/getAreasEmpresa/'.$id;
   
             $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
             if($response){
@@ -1009,6 +1009,17 @@ class Activo extends BaseController {
               }
             }
         }
+        public function getPosicionByArea($area_id){
+          if($this->session->logged_in){
+            $get_endpoint = '/api/getPosicionByArea/'.$area_id;
+
+            $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+            if($response){
+            
+              echo json_encode($response);
+            }
+          }
+        }
         public function getPosicionByActivo(){
           if($this->session->logged_in){
             $get_endpoint = '/api/getPosicionByActivo';
@@ -1172,7 +1183,7 @@ class Activo extends BaseController {
                   $request_data = $this->request->getPost();
                 
                   $response = (perform_http_request('POST', REST_API_URL . $post_endpoint,$request_data));
-                  // var_dump($response);
+                  // var_dump($response);die();
                   
                     if($response->msg ){
                         echo json_encode($response->msg);

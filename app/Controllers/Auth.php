@@ -77,7 +77,9 @@ class Auth extends BaseController {
                   'change'=> false,
                   'id' => $response->id,
                   'token' => $response->access_token->jwt,
+                  'escenario' => $response->escenario,
                   'permisos' => $response->permisos,
+                  'is_user_negocio' => $response->is_user_negocio
                 ];
                
               }else{
@@ -86,7 +88,9 @@ class Auth extends BaseController {
                   'logged_in' => true,
                   'change' => true,
                   'id' => $response->id,
+                  'escenario' => $response->escenario,
                   'token' => $response->access_token->jwt,
+                  'is_user_negocio' => $response->is_user_negocio
                 ];
                 
               }
