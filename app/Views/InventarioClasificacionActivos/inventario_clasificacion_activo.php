@@ -42,6 +42,9 @@
                         <table id="table_inventario_clasificacion_activo" class="table table-centered table-bordered datatable dt-responsive nowrap" data-page-length="5" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead class="thead-light">
                                 <tr>
+                                    <th rowspan="2">
+                                        <input type="checkbox" style="width: 2vw;" id="check_ica_all">
+                                    </th>
                                     <th rowspan="2">ID</th>
                                     <th colspan="12" class="text-center">Descripcion</th>
                                     <th colspan="3" class="text-center">Valoración</th>
@@ -70,6 +73,24 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="wrapper_buttons_status mt-2" style="display:none;gap:1vw;">
+                        <?php
+                            if($is_user_negocio){
+                                echo '
+                                    <button onclick="changeStatus(this)" estado="1" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light">Borrador</button>
+                                    <button onclick="changeStatus(this)" estado="2" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light">Registrado</button>
+                                ';
+                            }else{
+                                echo '
+                                    <button onclick="changeStatus(this)" estado="3" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light">Observado</button>
+                                    <button onclick="changeStatus(this)" estado="4" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light">Aprobado</button>
+                                    <button onclick="changeStatus(this)" estado="5" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light">Por Actualizar</button>
+                                ';
+                            }
+
+                        ?>
+                        
                     </div>
                 </div>
             </div>

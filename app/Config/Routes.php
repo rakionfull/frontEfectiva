@@ -260,6 +260,7 @@ $routes->post('/deleteInventarioClasificacionActivo/(:num)','InventarioClasifica
 $routes->get('/exportExcelICA','InventarioClasificacionActivosController::exportExcelICA');
 $routes->get('/exportExcelICAHistoricos','InventarioClasificacionActivosController::exportExcelICAHistoricos');
 $routes->post('/getValorByValoraciones','InventarioClasificacionActivosController::getValorByValoraciones');
+$routes->post('/updateStatus/(:num)','InventarioClasificacionActivosController::updateStatus/$1');
 
 
 

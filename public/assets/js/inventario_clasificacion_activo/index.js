@@ -41,6 +41,12 @@ function loadTableInventarioClasificacionActivo(){
         clickToSelect:false,
         ajax: BASE_URL+"/getListInventarioClasificacionActivo",
         aoColumns: [
+            {
+                data:null,
+                "mRender":function(data){
+                    return `<input ${data.ica_estado == '2' ? 'disabled' : ''} onclick="showButtonsICA()" ica_id="${data.ica_id}" style='width:1vw;height:1vw;' type='checkbox' id='check_ica'/>`
+                }
+            },
             { "data": "ica_id" },
             { "data": "empresa" },
             { "data": "area" },
@@ -967,5 +973,79 @@ $('#modal_inventario_clasificacion_activo #val_d,#modal_inventario_clasificacion
         //     title: 'Opps',
         //     text: 'Seleccione los datos de confidencialidad e integridad'
         // })
+    }
+})
+
+function showButtonsICA(){
+    let inputs = document.querySelectorAll('#check_ica')
+    let count = 0
+    console.log(inputs)
+    inputs.forEach(element => {
+        console.log(element.checked)
+        if(element.checked){
+            count ++;
+        }else{
+        }
+    });
+    if(count > 0){
+        $('.wrapper_buttons_status').css('display','flex')
+    }else{
+        $('.wrapper_buttons_status').css('display','none')
+    }
+}
+
+function changeStatus(arg){
+    let inputs = document.querySelectorAll('#check_ica')
+    inputs.forEach(element => {
+        if(element.checked){
+            $.ajax({
+                method: "POST",
+                url: BASE_URL+"/updateStatus/"+element.getAttribute('ica_id'),
+                data:{
+                    'estado':$(arg).attr('estado')
+                },
+                dataType: "JSON"
+            })
+            .done(function(respuesta) {
+                $("#table_inventario_clasificacion_activo").DataTable().ajax.reload(null, false);
+                $('.wrapper_buttons_status').css('display','none')
+                document.getElementById('check_ica_all').checked = false
+            })
+            .fail(function(error) {
+                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrio un error'
+                })
+            })
+            .always(function() {
+            });
+
+        }else{
+        }
+    });
+}
+
+$('#check_ica_all').click(function(){
+    let check_all = document.getElementById('check_ica_all')
+    let inputs = document.querySelectorAll('#check_ica')
+    if(check_all.checked){
+        inputs.forEach(element => {
+            if(is_user_negocio){
+                if(element.getAttribute('disabled') != ""){
+                    element.checked = true
+                    $('.wrapper_buttons_status').css('display','flex')
+                }
+            }else{
+                element.checked = true
+                $('.wrapper_buttons_status').css('display','flex')
+            }
+        });
+    }else{
+        inputs.forEach(element => {
+            element.checked = false
+            $('.wrapper_buttons_status').css('display','none')
+        });
     }
 })
