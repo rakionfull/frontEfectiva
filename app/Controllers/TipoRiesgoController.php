@@ -16,16 +16,6 @@ class TipoRiesgoController extends BaseController
             }
         }
     }
-    public function showTipoRiesgo($id)
-    {
-        if ($this->session->logged_in) {
-            $get_endpoint = '/api/showTipoRiesgo/' . $id;
-            $response = perform_http_request('GET', REST_API_URL . $get_endpoint, []);
-            if ($response) {
-                echo json_encode($response);
-            }
-        }
-    }
 
     public function addTipoRiesgo()
     {
@@ -33,9 +23,12 @@ class TipoRiesgoController extends BaseController
             if (!$this->request->getPost()) {
                 return redirect()->to(base_url('/riesgos'));
             } else {
+                $currentDate = date("Y-m-d H:i:s");
                 $post_endpoint = '/api/addTipoRiesgo';
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $request_data['id_user_added'] = $this->session->id;
+                $request_data['date_add'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 if ($response->msg) {
                     echo json_encode($response->msg);
@@ -52,11 +45,12 @@ class TipoRiesgoController extends BaseController
             if (!$this->request->getPost()) {
                 return redirect()->to(base_url('/riesgos'));
             } else {
-
+                $currentDate = date("Y-m-d H:i:s");
                 $post_endpoint = '/api/updateTipoRiesgo';
                 $request_data = [];
                 $request_data = $this->request->getPost();
-
+                $request_data['id_user_updated'] = $this->session->id;
+                $request_data['date_modify'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 // var_dump($response);
 
@@ -73,7 +67,11 @@ class TipoRiesgoController extends BaseController
     {
         if ($this->session->logged_in) {
             $post_endpoint = '/api/deleteTipoRiesgo/' . $id;
-            $response = (perform_http_request('DELETE', REST_API_URL . $post_endpoint, []));
+            $currentDate = date("Y-m-d H:i:s");
+            $request_data = $this->request->getPost();
+            $request_data['id_user_deleted'] = $this->session->id;
+            $request_data['date_deleted'] = $currentDate;
+            $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
             if ($response->msg) {
                 echo json_encode($response->msg);
             } else {

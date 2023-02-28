@@ -16,17 +16,6 @@ class TipoAmenazaController extends BaseController
             }
         }
     }
-    public function showTipoAmenaza($id)
-    {
-        if ($this->session->logged_in) {
-            $get_endpoint = '/api/showTipoAmenaza/' . $id;
-            $response = perform_http_request('GET', REST_API_URL . $get_endpoint, []);
-            if ($response) {
-                echo json_encode($response);
-            }
-        }
-    }
-
     public function addTipoAmenaza()
     {
         if ($this->session->logged_in) {
@@ -36,6 +25,9 @@ class TipoAmenazaController extends BaseController
                 $post_endpoint = '/api/addTipoAmenaza';
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_added'] = $this->session->id;
+                $request_data['date_add'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 if ($response) {
                     echo json_encode($response);
@@ -55,6 +47,9 @@ class TipoAmenazaController extends BaseController
                 $post_endpoint = '/api/updateTipoAmenaza/' . $id;
                 $request_data = [];
                 $request_data = $this->request->getPost();
+                $currentDate = date("Y-m-d H:i:s");
+                $request_data['id_user_updated'] = $this->session->id;
+                $request_data['date_modify'] = $currentDate;
                 $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
                 if ($response) {
                     echo json_encode($response);
@@ -69,7 +64,10 @@ class TipoAmenazaController extends BaseController
     {
         if ($this->session->logged_in) {
             $post_endpoint = '/api/deleteTipoAmenaza/' . $id;
-            $response = (perform_http_request('DELETE', REST_API_URL . $post_endpoint, []));
+            $currentDate = date("Y-m-d H:i:s");
+            $request_data['id_user_deleted'] = $this->session->id;
+            $request_data['date_deleted'] = $currentDate;
+            $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
             if ($response->msg) {
                 echo json_encode($response->msg);
             } else {

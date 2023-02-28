@@ -162,6 +162,9 @@ document.getElementById("add_desc_vulnerabilidad").addEventListener('click',func
 //editar Empresa
 $('#table_desc_vulnerabilidad tbody').on( 'click', 'editVulnerabilidad', function(event){
     $('#modal_desc_vulnerabilidad #id_categoria_vulnerabilidad option').remove()
+    var table = $('#table_desc_vulnerabilidad').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
     $.ajax({
         method: "GET",
         url: BASE_URL+"/main/getCategoriasVulnerabilidad",
@@ -180,26 +183,15 @@ $('#table_desc_vulnerabilidad tbody').on( 'click', 'editVulnerabilidad', functio
             });
             $('#modal_desc_vulnerabilidad #id_categoria_vulnerabilidad').append(options)
 
-            $.ajax({
-                method: "GET",
-                url: BASE_URL+"/main/showDescVulnerabilidad/"+Number(event.currentTarget.getAttribute('data-id')),
-                dataType: "JSON",
-            })
-            .done(function(respuesta) {
-                console.log(respuesta)
-                if (respuesta.data != null) 
-                {
-                    $("#modal_desc_vulnerabilidad").modal("show");
-                    document.getElementById("id_desc_vulnerabilidad").value=event.currentTarget.getAttribute('data-id');
-                    $('#modal_desc_vulnerabilidad #id_categoria_vulnerabilidad').val(respuesta.data[0].idcategoria)
-                    $('#modal_desc_vulnerabilidad #vulnerabilidad').val(respuesta.data[0].vulnerabilidad)
-                } 
-                
-            })
-            .fail(function(error) {
-                console.log(error)
-            })
-            $("#modal_desc_vulnerabilidad").modal("show");
+            if(regNum == '0'){
+
+            }else{
+                $("#modal_desc_vulnerabilidad").modal("show");
+                document.getElementById("id_desc_vulnerabilidad").value=event.currentTarget.getAttribute('data-id');
+                $('#modal_desc_vulnerabilidad #id_categoria_vulnerabilidad').val(regDat[0]['idcategoria'])
+                $('#modal_desc_vulnerabilidad #vulnerabilidad').val(regDat[0]['vulnerabilidad'])
+                $("#modal_desc_vulnerabilidad").modal("show");
+            }
 
         } 
         
@@ -227,7 +219,7 @@ $('#table_desc_vulnerabilidad tbody').on( 'click', 'deleteVulnerabilidad', funct
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                method: "DELETE",
+                method: "POST",
                 url: BASE_URL+"/main/deleteDescVulnerabilidad/"+Number(id),
                 dataType: "JSON"
             })

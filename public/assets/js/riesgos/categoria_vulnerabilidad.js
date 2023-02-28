@@ -151,29 +151,23 @@ document.getElementById("add_categoria_vulnerabilidad").addEventListener('click'
 
 $('#table_categoria_vulnerabilidad tbody').on( 'click', 'editCategoria', function(event){
     
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showCategoriasVulnerabilidad/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            $('#modal_categoria_vulnerabilidad #title_categoria_vulnerabilidad').html('Modificar Categoría de Vulnerabilidad')
-            document.getElementById("form_categoria_vulnerabilidad").reset();
-            document.getElementById("add_categoria_vulnerabilidad").style.display = "none";
-            document.getElementById("update_categoria_vulnerabilidad").style.display = "block";
-            document.getElementById("id_categoria_vulnerabilidad").value=event.currentTarget.getAttribute('data-id');
-            $('#modal_categoria_vulnerabilidad #categoria').val(respuesta.data[0].categoria)
-            $('#modal_categoria_vulnerabilidad #estado').val(respuesta.data[0].estado)
-            $("#modal_categoria_vulnerabilidad").modal("show");
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
+    $('#modal_categoria_vulnerabilidad #title_categoria_vulnerabilidad').html('Modificar Categoría de Vulnerabilidad')
+    document.getElementById("form_categoria_vulnerabilidad").reset();
+    document.getElementById("add_categoria_vulnerabilidad").style.display = "none";
+    document.getElementById("update_categoria_vulnerabilidad").style.display = "block";
+
+    var table = $('#table_categoria_vulnerabilidad').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+    if(regNum == '0'){
+
+    }else{
+        document.getElementById("id_categoria_vulnerabilidad").value=event.currentTarget.getAttribute('data-id');
+        $('#modal_categoria_vulnerabilidad #categoria').val(regDat[0]['categoria'])
+        $('#modal_categoria_vulnerabilidad #estado').val(regDat['0']['estado'])
+        $("#modal_categoria_vulnerabilidad").modal("show");
+    }
+
 });
 
 $('#table_categoria_vulnerabilidad tbody').on( 'click', 'deleteCategoria', function(event){
@@ -189,7 +183,7 @@ $('#table_categoria_vulnerabilidad tbody').on( 'click', 'deleteCategoria', funct
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                method: "DELETE",
+                method: "post",
                 url: BASE_URL+"/main/deleteCategoriasVulnerabilidad/"+Number(id),
                 dataType: "JSON"
             })

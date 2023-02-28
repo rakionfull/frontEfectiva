@@ -162,7 +162,9 @@ document.getElementById("add_desc_amenaza").addEventListener('click',function(){
 //editar Empresa
 $('#table_desc_amenaza tbody').on( 'click', 'editDesc', function(event){
     $('#modal_desc_amenaza #id_tipo option').remove()
-    
+    var table = $('#table_desc_amenaza').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
     $.ajax({
         method: "GET",
         url: BASE_URL+"/main/getTiposAmenaza",
@@ -181,31 +183,22 @@ $('#table_desc_amenaza tbody').on( 'click', 'editDesc', function(event){
             });
             $('#modal_desc_amenaza #id_tipo').append(options)
 
-            $.ajax({
-                method: "GET",
-                url: BASE_URL+"/main/showDescAmenaza/"+Number(event.currentTarget.getAttribute('data-id')),
-                dataType: "JSON",
-            })
-            .done(function(respuesta) {
-                console.log(respuesta)
-                if (respuesta.data != null) 
-                {
-                    $("#modal_desc_amenaza").modal("show");
-                    document.getElementById("id_desc_amenaza").value=event.currentTarget.getAttribute('data-id');
-                    $('#modal_desc_amenaza #id_tipo').val(respuesta.data[0].idtipo_amenaza)
-                    $('#modal_desc_amenaza #amenaza').val(respuesta.data[0].amenaza)
-                } 
-                
-            })
-            .fail(function(error) {
-                console.log(error)
-            })
-            $("#modal_desc_amenaza").modal("show");
+            
+            if(regNum == '0'){
+
+            }else{
+                document.getElementById("id_desc_amenaza").value=event.currentTarget.getAttribute('data-id');
+                $('#modal_desc_amenaza #id_tipo').val(regDat[0]["idtipo_amenaza"])
+                $('#modal_desc_amenaza #amenaza').val(regDat[0]["amenaza"])
+                $("#modal_desc_amenaza").modal("show");
+                $("#modal_desc_amenaza").modal("show");
+            }
 
         } 
         
     })
     .fail(function(error) {
+        console.log(error)
         Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -228,7 +221,7 @@ $('#table_desc_amenaza tbody').on( 'click', 'deleteDesc', function(event){
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                method: "DELETE",
+                method: "POST",
                 url: BASE_URL+"/main/deleteDescAmenaza/"+Number(id),
                 dataType: "JSON"
             })

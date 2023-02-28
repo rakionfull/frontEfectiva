@@ -940,6 +940,7 @@ class Main extends BaseController {
 
       }
       public function riesgos(){
+<<<<<<< HEAD
        
           if($this->session->logged_in){
             $get_endpoint = '/api/getTiposAmenaza';
@@ -953,6 +954,19 @@ class Main extends BaseController {
             'tipos_amenaza' => $tipo_amenaza
           ]);
         
+=======
+        if($this->session->logged_in){
+          $get_endpoint = '/api/getTiposAmenaza';
+          $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+          if($response){
+            $tipo_amenaza = $response->data;
+          }
+        }
+        return view('parametrizacion/riesgos',[
+          'escenario' => $this->session->escenario,
+          'tipos_amenaza' => $tipo_amenaza
+        ]);
+>>>>>>> 5d6485c8dbcd70d64efba5161896486d610a334f
       } 
       public function controles(){
         

@@ -149,26 +149,19 @@ $('#table_tipo_riesgo tbody').on( 'click', 'editEmpresa', function(event){
     document.getElementById("form_tipo_riesgo").reset();
     document.getElementById("add_tipo_riego").style.display = "none";
     document.getElementById("update_tipo_riesgo").style.display = "block";
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showTipoRiesgo/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            document.getElementById("id_tipo_riesgo").value=event.currentTarget.getAttribute('data-id');
-            $('#modal_tipo_riesgo #input_tipo_riesgo').val(respuesta.data[0].tipo_riesgo)
-            $('#modal_tipo_riesgo #descripcion').val(respuesta.data[0].descripcion)
-            $('#modal_tipo_riesgo #estado').val(respuesta.data[0].estado)
-            $("#modal_tipo_riesgo").modal("show");
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
+
+    var table = $('#table_tipo_riesgo').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+    if(regNum == '0'){
+
+    }else{
+        document.getElementById("id_tipo_riesgo").value=event.currentTarget.getAttribute('data-id');
+        $('#modal_tipo_riesgo #input_tipo_riesgo').val(regDat[0]["tipo_riesgo"])
+        $('#modal_tipo_riesgo #descripcion').val(regDat[0]["descripcion"])
+        $('#modal_tipo_riesgo #estado').val(regDat[0]["estado"])
+        $("#modal_tipo_riesgo").modal("show");
+    }
 });
 //Eliminar Empresa
 $('#table_tipo_riesgo tbody').on( 'click', 'deleteEmpresa', function(event){
@@ -195,11 +188,12 @@ $('#table_tipo_riesgo tbody').on( 'click', 'deleteEmpresa', function(event){
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                method: "DELETE",
+                method: "POST",
                 url: BASE_URL+"/main/deleteTipoRiesgo/"+Number(id),
                 dataType: "JSON"
             })
             .done(function(respuesta) {
+                console.log(respuesta)
                 if (respuesta) 
                 {
                     alerta_tipo_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+

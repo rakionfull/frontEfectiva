@@ -88,6 +88,7 @@ class Auth extends BaseController {
                   'logged_in' => true,
                   'change' => true,
                   'id' => $response->id,
+                  'escenario' => $response->escenario,
                   'token' => $response->access_token->jwt,
                   'escenario' => $response->escenario,
 

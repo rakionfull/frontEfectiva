@@ -29,15 +29,26 @@
         <link href="<?=base_url('public/assets/css/app.css'); ?>" id="app-style" rel="stylesheet" type="text/css" />
         <link href="<?=base_url('public/assets/css/home.css'); ?>" id="app-style" rel="stylesheet" type="text/css" />
         <!-- js principales -->
+        <!-- Required datatable js -->
+        <link href="<?=base_url('public/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css'); ?>" rel="stylesheet" type="text/css" />  
+
+
         <script src="<?=base_url('public/assets/libs/jquery/jquery.min.js'); ?>"></script>
         <script src="<?=base_url('public/assets/libs/datatables.net/js/jquery.dataTables.min.js'); ?>"></script>
-           <!-- Required datatable js -->
+
+
         
+        
+
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+        <script src="<?=base_url('public/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js'); ?>"></script>
+        <script src="<?=base_url('public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js'); ?>"></script>
         <script src="<?=base_url('public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js'); ?>"></script>
         <script src="<?=base_url('public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js'); ?>"></script>
+        <script src="<?=base_url('public/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js'); ?>"></script>
+        <script src="<?=base_url('public/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'); ?>"></script>
         <!-- https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js -->
         <link href="<?=base_url('public/assets/libs/sweetalert2/sweetalert2.min.css'); ?>" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
        <!-- twitter-bootstrap-wizard css -->
        <link rel="stylesheet" href="<?=base_url('public/assets/libs/twitter-bootstrap-wizard/prettify.css'); ?>">
        <!-- <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet"> -->
