@@ -109,7 +109,7 @@ $session = session();?>
                                         <li><a href="<?=base_url('controles') ?>">Controles</a></li>
                                     <?php }?>
                                     <?php if($session->permisos[9]->view_det==1){ ?>
-                                        <li><a href="<?=base_url('controles') ?>">Planes de Acción</a></li>
+                                        <li><a href="<?=base_url('planesAccion') ?>">Planes de Acción</a></li>
                                     <?php }?>
                                        
                                         
@@ -125,7 +125,7 @@ $session = session();?>
                                     </a>
                                     <ul class="sub-menu" aria-expanded="false">  
                                     <?php if($session->permisos[10]->view_det==1){ ?>
-                                        <li><a href="<?=base_url('') ?>">Inventario y clasificación de activos</a></li>
+                                        <li><a href="<?=base_url('inventario-clasificacion-activos') ?>">Inventario y clasificación de activos</a></li>
                                     <?php }?>
                                     <?php if($session->permisos[11]->view_det==1){ ?>
                                         <li><a href="<?=base_url('') ?>">Evaluación de Riesgos SI-C</a></li>
@@ -134,7 +134,7 @@ $session = session();?>
                                         <li><a href="<?=base_url('') ?>">Registro de Controles</a></li>
                                     <?php }?>
                                     <?php if($session->permisos[13]->view_det==1){ ?>
-                                        <li><a href="<?=base_url('') ?>">Registro de Plan de acción</a></li>
+                                        <li><a href="<?=base_url('planAccion') ?>">Registro de Plan de acción</a></li>
                                     <?php }?>
                                        
                                         

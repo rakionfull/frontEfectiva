@@ -1,31 +1,39 @@
-
-console.log(count_impacto)
-if($('#apartImpactoRiesgo #escenario-2-tab')){
-    $('#apartImpactoRiesgo #escenario-2-tab').click(function(){
-        if($('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_1')){
-            $('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_1').css('display','none')   
-        }
-        $('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_2').css('display','block')
-    })
-}
-if($('#apartImpactoRiesgo #escenario-1-tab')){
-    $('#apartImpactoRiesgo #escenario-1-tab').click(function(){
-        if(count_impacto < 1){
-            $('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_1').css('display','block')
-        }
-        $('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_2').css('display','none')
-
-    })
-}
 var alerta_impacto_riesgo = document.getElementById("alerta_impacto_riesgo");
+console.log('Escenario ',escenario)
+if(escenario == null){
+    noEsceneImpacto()
+}else{
+    if(escenario == 2){
+        activeScene2Impacto()
+    }else{
+        if(escenario == 1){
+            activeScene1Impacto()
+        }
+    }
+}
 
-function loadTableImpactoRiesgo(){
-    if ($.fn.DataTable.isDataTable('#table_impacto_riesgo_1')){
-        $('#table_impacto_riesgo_1').DataTable().rows().remove();
-        $('#table_impacto_riesgo_1').DataTable().destroy();
+$('#impacto-1-tab').click(function(){
+    $('#btn_add_impacto_2').css('display','none')
+    $('#btn_add_impacto_1').css('display','block')
+})
+$('#impacto-2-tab').click(function(){
+    $('#btn_add_impacto_1').css('display','none')
+    $('#btn_add_impacto_2').css('display','block')
+})
+$('#modal_impacto_riesgo_escenario_1 #tipo_valor').on('change',function(){
+    if($('#modal_impacto_riesgo_escenario_1 #tipo_valor').val() == 'Formula'){
+        $('#modal_impacto_riesgo_escenario_1 .formula_1_probabilidad').css('display','block')
+    }else{
+        $('#modal_impacto_riesgo_escenario_1 .formula_1_probabilidad').css('display','none')
+    }
+})
+function loadTableImpacto1(){
+    if ($.fn.DataTable.isDataTable('#table_impacto_1')){
+        $('#table_impacto_1').DataTable().rows().remove();
+        $('#table_impacto_1').DataTable().destroy();
     }
 
-    $('#table_impacto_riesgo_1').DataTable({
+    $('#table_impacto_1').DataTable({
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -46,13 +54,8 @@ function loadTableImpactoRiesgo(){
                 "previous": "Anterior"
             }
         },
-        // scrollY: "200px",
-        // fixedColumns:   {
-        //     heightMatch: 'none'
-        // },
         responsive: false,
         autoWidth: false,
-        // processing: true,
         lengthMenu:[5,10,25,50],
         pageLength:5,
         clickToSelect:false,
@@ -61,8 +64,8 @@ function loadTableImpactoRiesgo(){
             { "data": "id" },
             { "data": "descripcion" },
             { "data": "tipo_regla" },
-            { "data": "tipo_valor" },
             { "data": "formula" },
+            { "data": "tipo_valor" },
             { "data": "comentario" },
             {
                 "data": null,
@@ -77,8 +80,8 @@ function loadTableImpactoRiesgo(){
             {
                 data:null,
                 "mRender":function(data){
-                    return `<editImpacto data-id="${data.id}" class='text-primary btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Editar' data-original-title='Editar'><i class='mdi mdi-pencil font-size-18'></i></editImpacto>
-                    <deleteImpacto data-id="${data.id}" class='text-danger btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Eliminar' data-original-title='Eliminar'><i class='mdi mdi-trash-can font-size-18'></i></deleteImpacto>`
+                    return `<editImpacto1 data-id="${data.id}" class='text-primary btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Editar' data-original-title='Editar'><i class='mdi mdi-pencil font-size-18'></i></editImpacto1>
+                    <deleteImpacto1  data-id="${data.id}" class='text-danger btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Eliminar' data-original-title='Eliminar'><i class='mdi mdi-trash-can font-size-18'></i></deleteImpacto1>`
                 }
             },
         ],
@@ -91,18 +94,313 @@ function loadTableImpactoRiesgo(){
             
         ],
         'drawCallback': function () {
-            $( 'table_impacto_riesgo_1 tbody tr td' ).css( 'padding', '1px 1px 1px 1px' );
+            $( 'table_impacto_1 tbody tr td' ).css( 'padding', '1px 1px 1px 1px' );
         }
         
     })
 }
-function loadTableImpactoRiesgo2(){
-    if ($.fn.DataTable.isDataTable('#table_impacto_riesgo_2')){
-        $('#table_impacto_riesgo_2').DataTable().rows().remove();
-        $('#table_impacto_riesgo_2').DataTable().destroy();
+
+document.getElementById("btn_add_impacto_1").addEventListener('click',function(){
+    $('#modal_impacto_riesgo_escenario_1').modal('show')
+    document.getElementById("title_impacto_riesgo_esc_1").innerHTML = "Agregar Impacto de Riesgo Escenario 1";
+    document.getElementById("form_impacto_riesgo_escenario_1").reset();
+    document.getElementById("add_impacto_riego_escenario_1").style.display = "block";
+    document.getElementById("update_impacto_riego_escenario_1").style.display = "none";
+})
+document.getElementById('add_impacto_riego_escenario_1').addEventListener('click',function(){
+    $descripcion = $('#modal_impacto_riesgo_escenario_1 #descripcion').val()
+    $tipo_regla = $('#modal_impacto_riesgo_escenario_1 #tipo_regla').val()
+    $tipo_valor = $('#modal_impacto_riesgo_escenario_1 #tipo_valor').val()
+    $estado = $('#modal_impacto_riesgo_escenario_1 #estado').val()
+    $comentario = $('#modal_impacto_riesgo_escenario_1 #comentario').val()
+    $formula = $('#modal_impacto_riesgo_escenario_1 #formula').val()
+    let activesProb = 0
+    let activesImpacto = 0
+    if(
+        $descripcion != "" &&
+        $tipo_regla != "" &&
+        $tipo_valor != "" &&
+        $estado != "" &&
+        $comentario != ""
+    ){
+        const postData = {
+            descripcion: $descripcion,
+            tipo_regla:$tipo_regla,
+            tipo_valor:$tipo_valor,
+            estado:$estado,
+            comentario:$comentario,
+            formula:$formula
+        }
+        $.ajax({
+            method:'POST',
+            url:BASE_URL+"/main/addImpactoRiesgo1",
+            data:postData,
+            dataType:"JSON"
+        })
+        .done(function(respuesta){
+            console.log(respuesta)
+            if(!respuesta.error){
+                document.getElementById("form_impacto_riesgo_escenario_1").reset();
+                $('#modal_impacto_riesgo_escenario_1').modal('hide')
+                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    'Se ha guardado exitosamente'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                    '</div>';
+                $("#table_impacto_1").DataTable().ajax.reload(null, false);
+                let p1 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActives/1",
+                    dataType:'json'
+                })
+                .done(function(resp){
+                    activesProb = resp.data.length
+                })
+                let p2 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActivesImpacto/1",
+                    dataType:'json'
+                })
+                .done(function(res){
+                    activesImpacto = res.data.length
+                })
+                Promise.all([p1,p2]).then(resp => {
+                    if(activesImpacto > 0){
+                        activeScene1Impacto()
+                        escenario = 1
+                    }else{
+                        if(activesProb == 0){
+                            escenario = null
+                            noEsceneImpacto()
+                        }
+                    }
+                })
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: respuesta.msg
+                }) 
+            }
+        })
+        .fail(function(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+            })
+        })
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Faltan Datos'
+        })
+    }
+})
+
+$('#table_impacto_1 tbody').on('click','editImpacto1',function(){
+    $('#modal_impacto_riesgo_escenario_1').modal('show')
+    document.getElementById("title_impacto_riesgo_esc_1").innerHTML = "Modificar Impacto de Riesgo Escenario 1";
+    document.getElementById("form_impacto_riesgo_escenario_1").reset();
+    document.getElementById("add_impacto_riego_escenario_1").style.display = "none";
+    document.getElementById("update_impacto_riego_escenario_1").style.display = "block";
+    //recuperando los datos
+    var table = $('#table_impacto_1').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+    console.log(regNum)
+    console.log(this)
+    if (regNum == '0') {
+        //console.log("error");
+    }else{
+        $('#modal_impacto_riesgo_escenario_1 #id_impacto_riesgo').val(regDat[0]["id"])
+        $('#modal_impacto_riesgo_escenario_1 #descripcion').val(regDat[0]["descripcion"])
+        $('#modal_impacto_riesgo_escenario_1 #tipo_regla').val(regDat[0]["tipo_regla"])
+        $('#modal_impacto_riesgo_escenario_1 #tipo_valor').val(regDat[0]["tipo_valor"])
+        $('#modal_impacto_riesgo_escenario_1 #estado').val(regDat[0]["estado"])
+        $('#modal_impacto_riesgo_escenario_1 #comentario').val(regDat[0]["comentario"])
+        $('#modal_impacto_riesgo_escenario_1 #formula').val(regDat[0]["formula"])
+    }
+})
+$('#update_impacto_riego_escenario_1').click(function(){
+    $descripcion = $('#modal_impacto_riesgo_escenario_1 #descripcion').val()
+    $tipo_regla = $('#modal_impacto_riesgo_escenario_1 #tipo_regla').val()
+    $tipo_valor = $('#modal_impacto_riesgo_escenario_1 #tipo_valor').val()
+    $estado = $('#modal_impacto_riesgo_escenario_1 #estado').val()
+    $comentario = $('#modal_impacto_riesgo_escenario_1 #comentario').val()
+    $formula = $('#modal_impacto_riesgo_escenario_1 #formula').val()
+    let activesProb = 0
+    let activesImpacto = 0
+    if(
+        $descripcion != "" &&
+        $tipo_regla != "" &&
+        $tipo_valor != "" &&
+        $estado != "" &&
+        $comentario != ""
+    ){
+        const postData = {
+            id:$('#modal_impacto_riesgo_escenario_1 #id_impacto_riesgo').val(),
+            descripcion: $descripcion,
+            tipo_regla:$tipo_regla,
+            tipo_valor:$tipo_valor,
+            estado:$estado,
+            comentario:$comentario,
+            formula:$formula
+        }
+        $.ajax({
+            method:'POST',
+            url:BASE_URL+"/main/updateImpactoRiesgo1",
+            data:postData,
+            dataType:"JSON"
+        })
+        .done(function(respuesta){
+            console.log(respuesta)
+            if(!respuesta.error){
+                document.getElementById("form_impacto_riesgo_escenario_1").reset();
+                $('#modal_impacto_riesgo_escenario_1').modal('hide')
+                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    'Se ha modificado exitosamente'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                    '</div>';
+                $("#table_impacto_1").DataTable().ajax.reload(null, false);
+                let p1 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActives/1",
+                    dataType:'json'
+                })
+                .done(function(resp){
+                    activesProb = resp.data.length
+                })
+                let p2 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActivesImpacto/1",
+                    dataType:'json'
+                })
+                .done(function(res){
+                    activesImpacto = res.data.length
+                })
+                Promise.all([p1,p2]).then(resp => {
+                    if(activesImpacto > 0){
+                        activeScene1Impacto()
+                        escenario = 1
+                    }else{
+                        if(activesProb == 0){
+                            escenario = null
+                            noEsceneImpacto()
+                        }
+                    }
+                })
+
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: respuesta.msg
+                }) 
+            }
+        })
+        .fail(function(error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+            })
+        })
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Faltan Datos'
+        })
+    }
+})
+
+$('#table_impacto_1 tbody').on( 'click', 'deleteImpacto1', function(event){
+    let id = event.currentTarget.getAttribute('data-id')
+    Swal.fire({
+        title: 'Desea eliminar el impacto de riesgo?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        denyButtonText: `Cancel`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                method: "post",
+                url: BASE_URL+"/main/deleteImpactoRiesgo/"+Number(id),
+                dataType: "JSON"
+            })
+            .done(function(respuesta) {
+                if (!respuesta.error) 
+                {
+                   
+                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    'Se ha eliminado satisfactoriamente'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                    '</div>';
+                    $("#table_impacto_1").DataTable().ajax.reload(null, false);
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/1",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/1",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(resp => {
+                        if(activesImpacto > 0){
+                            activeScene1Impacto()
+                            escenario = 1
+                        }else{
+                            if(activesProb == 0){
+                                escenario = null
+                                noEsceneImpacto()
+                            }
+                        }
+                    })
+                } 
+                
+            })
+            .fail(function(error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo eliminar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
+            })
+            .always(function() {
+            });
+        } else if (result.isDenied) {
+            Swal.fire('No hubo ningún cambio', '', 'info')
+        }
+    })
+    
+});
+
+
+// ESCENARIO 2
+
+function loadTableImpacto2(){
+    if ($.fn.DataTable.isDataTable('#table_impacto_2')){
+        $('#table_impacto_2').DataTable().rows().remove();
+        $('#table_impacto_2').DataTable().destroy();
     }
 
-    $('#table_impacto_riesgo_2').DataTable({
+    $('#table_impacto_2').DataTable({
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -123,13 +421,8 @@ function loadTableImpactoRiesgo2(){
                 "previous": "Anterior"
             }
         },
-        // scrollY: "200px",
-        // fixedColumns:   {
-        //     heightMatch: 'none'
-        // },
         responsive: false,
         autoWidth: false,
-        // processing: true,
         lengthMenu:[5,10,25,50],
         pageLength:5,
         clickToSelect:false,
@@ -139,7 +432,6 @@ function loadTableImpactoRiesgo2(){
             { "data": "descripcion" },
             { "data": "tipo_regla" },
             { "data": "tipo_valor" },
-            { "data": "formula" },
             { "data": "operador1" },
             { "data": "valor1" },
             { "data": "operador2" },
@@ -158,8 +450,8 @@ function loadTableImpactoRiesgo2(){
             {
                 data:null,
                 "mRender":function(data){
-                    return `<editImpacto data-id="${data.id}" class='text-primary btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Editar' data-original-title='Editar'><i class='mdi mdi-pencil font-size-18'></i></editImpacto>
-                    <deleteImpacto data-id="${data.id}" class='text-danger btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Eliminar' data-original-title='Eliminar'><i class='mdi mdi-trash-can font-size-18'></i></deleteImpacto>`
+                    return `<editImpacto2 data-id="${data.id}" class='text-primary btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Editar' data-original-title='Editar'><i class='mdi mdi-pencil font-size-18'></i></editImpacto2>
+                    <deleteImpacto2  data-id="${data.id}" class='text-danger btn btn-opcionTabla' data-toggle='tooltip' data-placement='top' title='Eliminar' data-original-title='Eliminar'><i class='mdi mdi-trash-can font-size-18'></i></deleteImpacto2>`
                 }
             },
         ],
@@ -172,213 +464,114 @@ function loadTableImpactoRiesgo2(){
             
         ],
         'drawCallback': function () {
-            $( 'table_impacto_riesgo_2 tbody tr td' ).css( 'padding', '1px 1px 1px 1px' );
+            $( 'table_impacto_2 tbody tr td' ).css( 'padding', '1px 1px 1px 1px' );
         }
         
     })
 }
 
-if($('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_1')){
-    $('#apartImpactoRiesgo #btn_add_impacto_riesgo_escenario_1').click(function(){
-        $("#modal_impacto_riesgo_escenario_1").modal("show");
-        $("#modal_impacto_riesgo_escenario_1 #title_prob_riesgo_esc_1").html("Registro Impacto de Riesgo");
-        document.getElementById("form_impacto_riesgo_escenario_1").reset();
-        $("#add_impacto_riego_escenario_1").css('display','block')
-        $("#update_impacto_riego_escenario_1").css('display','none')
-        if(count_impacto > 0){
-            $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','none')
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val('1 Valor')
-        }else{
-            $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','block')
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val('2 Valores')
-
-        }
-        if(count_impacto == 0){
-            $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','none')
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val('1 Valor')
-
-        }
-        if(count_2_impacto > 0){
-            $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','block')
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val('2 Valores')
-
-        }
-        if(count_2_impacto == 0){
-            $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','block')
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val('2 Valores')
-
-        }
-    })
-}
-$('#modal_impacto_riesgo_escenario_1 #tipo_regla_1').on('change',function(){
-    const val = $('#modal_impacto_riesgo_escenario_1 #tipo_regla_1').val()
-    if(val == "1 Valor"){
-        $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','none')
-    }else{
-        $('#modal_impacto_riesgo_escenario_1 .escene_2').css('display','block')
-    }
+document.getElementById("btn_add_impacto_2").addEventListener('click',function(){
+    $('#modal_impacto_riesgo_escenario_2').modal('show')
+    document.getElementById("title_impacto_riesgo_esc_2").innerHTML = "Agregar Impacto de Riesgo Escenario 2";
+    document.getElementById("form_impacto_riesgo_escenario_2").reset();
+    document.getElementById("add_impacto_riego_escenario_2").style.display = "block";
+    document.getElementById("update_impacto_riego_escenario_2").style.display = "none";
 })
-$('#modal_impacto_riesgo_escenario_1 #tipo_valor_1').on('change',function(){
-    const val = $('#modal_impacto_riesgo_escenario_1 #tipo_valor_1').val()
-    
-    if(val == "Formula"){
-        $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','block')
-    }else{
-        $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','none')
-    }
-})
-// document.getElementById("btn_add_probabilidad_riesgo_escenario_2").addEventListener("click",function(){              
-//     $("#modal_probabilidad_riesgo_escenario_2").modal("show");
-//     document.getElementById("title_prob_riesgo_esc_2").innerHTML = "Registro Probabilidad de Riesgo";
-//     document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
-//     document.getElementById("add_probabilidad_riego_escenario_2").style.display = "block";
-//     document.getElementById("update_probabilidad_riego_escenario_2").style.display = "none";
-// });
 
-document.getElementById("add_impacto_riego_escenario_1").addEventListener('click',function(){
-    $descripcion=$("#modal_impacto_riesgo_escenario_1 #descripcion_1").val();
-    $tipo_regla=$("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val();
-    $tipo_valor=$("#modal_impacto_riesgo_escenario_1 #tipo_valor_1").val();
-    $estado=$("#modal_impacto_riesgo_escenario_1 #estado_1").val()
-    $comentario=$("#modal_impacto_riesgo_escenario_1 #comentario_1").val()
-    $operador_1 = ''
-    $operador_2 = ''
-    $valor_1 = ''
-    $valor_2 = ''
-    $formula = ''
-    let passValidation = false
-    if(document.getElementById('operador_2')){
-        $operador_2=$("#modal_impacto_riesgo_escenario_1 #operador_2").val()
-    }
-    if(document.getElementById('operador_1')){
-        $operador_1=$("#modal_impacto_riesgo_escenario_1 #operador_1").val()
-    }
-    if(document.getElementById('valor_1')){
-        $valor_1=$("#modal_impacto_riesgo_escenario_1 #valor_1").val()
-    }
-    if(document.getElementById('valor_2')){
-        $valor_2=$("#modal_impacto_riesgo_escenario_1 #valor_2").val()
-    }
-    if($tipo_valor == "Formula"){
-        $formula = $("#modal_impacto_riesgo_escenario_1 #formula_1").val()
-    }
-    var postData = {}
-    let uri = ''
-    $view = 1
-    if($tipo_regla == "1 Valor"){
-        if($descripcion != "" && $tipo_regla != "" && $tipo_valor != "" && $estado != "" && $comentario != ""){
-            passValidation = true
-            postData = { 
-                descripcion:$descripcion,
-                tipo_regla:$tipo_regla,
-                tipo_valor:$tipo_valor,
-                estado:$estado,
-                comentario:$comentario,
-                formula:$formula
-            };
-            uri = BASE_URL+"/main/addImpactoRiesgo1"
-            $view = 1
-        }
-    }else{
-        if($descripcion != "" &&
+document.getElementById('add_impacto_riego_escenario_2').addEventListener('click',function(){
+    $descripcion = $('#modal_impacto_riesgo_escenario_2 #descripcion').val()
+    $tipo_regla = $('#modal_impacto_riesgo_escenario_2 #tipo_regla').val()
+    $tipo_valor = $('#modal_impacto_riesgo_escenario_2 #tipo_valor').val()
+    $operador_1 = $('#modal_impacto_riesgo_escenario_2 #operador_1').val()
+    $valor_1 = $('#modal_impacto_riesgo_escenario_2 #valor_1').val()
+    $operador_2 = $('#modal_impacto_riesgo_escenario_2 #operador_2').val()
+    $valor_2 = $('#modal_impacto_riesgo_escenario_2 #valor_2').val()
+    $estado = $('#modal_impacto_riesgo_escenario_2 #estado').val()
+    $comentario = $('#modal_impacto_riesgo_escenario_2 #comentario').val()
+    let activesProb = 0
+    let activesImpacto = 0
+    if(
+        $descripcion != "" &&
         $tipo_regla != "" &&
         $tipo_valor != "" &&
         $estado != "" &&
-        $operador_1 != "" &&
-        $valor_1 != "" &&
-        $valor_2 != "" &&
-        $comentario != ""
-        ){
-            passValidation = true
-            postData = { 
-                descripcion:$descripcion,
-                tipo_regla:$tipo_regla,
-                tipo_valor:$tipo_valor,
-                estado:$estado,
-                operador1:$operador_1,
-                valor1:$valor_1,
-                operador2:$operador_2,
-                valor2:$valor_2,
-                comentario:$comentario,
-                formula:$formula
-
-            };
-            uri = BASE_URL+"/main/addImpactoRiesgo2"
-            $view = 2
+        $comentario != "",
+        $operador_1 != "",
+        $operador_2 != "",
+        $valor_1 != "",
+        $valor_2 != ""
+    ){
+        const postData = {
+            descripcion: $descripcion,
+            tipo_regla:$tipo_regla,
+            tipo_valor:$tipo_valor,
+            estado:$estado,
+            comentario:$comentario,
+            operador1:$operador_1,
+            valor1:$valor_1,
+            operador2:$operador_2,
+            valor2:$valor_2
         }
-    }
-    if(passValidation){
-        try {
-            $.ajax({
-                method: "POST",
-                url: uri,
-                data: postData,
-                dataType: "JSON"
-            })
-            .done(function(respuesta) {
-                if (respuesta == true) 
-                {
-                    console.log($view)
-                    document.getElementById("form_impacto_riesgo_escenario_1").reset();
-                    $('#modal_impacto_riesgo_escenario_1').modal('hide');
-                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+        $.ajax({
+            method:'POST',
+            url:BASE_URL+"/main/addImpactoRiesgo2",
+            data:postData,
+            dataType:"JSON"
+        })
+        .done(function(respuesta){
+            console.log(respuesta)
+            if(!respuesta.error){
+                document.getElementById("form_impacto_riesgo_escenario_2").reset();
+                $('#modal_impacto_riesgo_escenario_2').modal('hide')
+                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
                     'Se ha guardado exitosamente'+
-                    '<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
                         '<span aria-hidden="true">&times;</span>'+
                         '</button>'+
                     '</div>';
-                    $("#table_impacto_riesgo_"+$view).DataTable().ajax.reload(null, false); 
-                    if($view == 1){
-                        $('#btn_add_impacto_riesgo_escenario_1').css('display','none')
-                        $('#escenario-1-tab-pane').addClass('show')
-                        $('#escenario-1-tab-pane').addClass('active')
-                        $('#escenario-2-tab-pane').removeClass('show')
-                        $('#escenario-2-tab-pane').removeClass('active')
-                        $('#escenario-2-tab').css('display','none')
-                        $('#escenario-1-tab').css('display','block')
-                        $('#escenario-1-tab').addClass('active')
+                $("#table_impacto_2").DataTable().ajax.reload(null, false);
+                let p1 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActives/2",
+                    dataType:'json'
+                })
+                .done(function(resp){
+                    activesProb = resp.data.length
+                })
+                let p2 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActivesImpacto/2",
+                    dataType:'json'
+                })
+                .done(function(res){
+                    activesImpacto = res.data.length
+                })
+                Promise.all([p1,p2]).then(resp => {
+                    if(activesImpacto > 0){
+                        activeScene2Impacto()
+                        escenario = 2
                     }else{
-                        $('#btn_add_impacto_riesgo_escenario_1').css('display','block')
-                        $('#escenario-2-tab-pane').addClass('show')
-                        $('#escenario-2-tab-pane').addClass('active')
-                        $('#escenario-1-tab-pane').removeClass('show')
-                        $('#escenario-1-tab-pane').removeClass('active')
-                        $('#escenario-1-tab').css('display','none')
-                        $('#escenario-2-tab').css('display','block')
-                        $('#escenario-2-tab').addClass('active')
-
+                        if(activesProb == 0){
+                            escenario = null
+                            noEsceneImpacto()
+                        }
                     }
-                    $('#apartImpactoRiesgo #escenario-'+$view+'-tab-pane').click()
-                    count_impacto += 1;
-                }else{
-                    $('#modal_impacto_riesgo_escenario_1').modal('hide');
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: respuesta
-                    })
-                }
-                
-            })
-            .fail(function(error) {
-                $('#modal_impacto_riesgo_escenario_1').modal('hide');
+                })
+            }else{
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
-                })
-            })
-            .always(function() {
-            });
-        }
-        catch(err) {
+                    text: respuesta.msg
+                }) 
+            }
+        })
+        .fail(function(error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
             })
-        }
-
+        })
     }else{
         Swal.fire({
             icon: 'error',
@@ -388,331 +581,241 @@ document.getElementById("add_impacto_riego_escenario_1").addEventListener('click
     }
 })
 
-$('#table_impacto_riesgo_1 tbody').on( 'click', 'editImpacto', function(event){
-    $("#modal_impacto_riesgo_escenario_1").modal("show");
-    $("#modal_impacto_riesgo_escenario_1 .escene_2").hide();
-    $("#modal_impacto_riesgo_escenario_1 #title_prob_riesgo_esc_1").html("Modificar Impacto de Riesgo")
+$('#table_impacto_2 tbody').on('click','editImpacto2',function(){
+    $('#modal_impacto_riesgo_escenario_2').modal('show')
+    document.getElementById("title_impacto_riesgo_esc_2").innerHTML = "Modificar Impacto de Riesgo Escenario 2";
+    document.getElementById("form_impacto_riesgo_escenario_2").reset();
+    document.getElementById("add_impacto_riego_escenario_2").style.display = "none";
+    document.getElementById("update_impacto_riego_escenario_2").style.display = "block";
+    //recuperando los datos
+    var table = $('#table_impacto_2').DataTable();
+    var regNum = table.rows( $(this).parents('tr') ).count().toString();
+    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
+    if (regNum == '0') {
+        //console.log("error");
+    }else{
+        $('#modal_impacto_riesgo_escenario_2 #id_impacto_riesgo').val(regDat[0]["id"])
+        $('#modal_impacto_riesgo_escenario_2 #descripcion').val(regDat[0]["descripcion"])
+        $('#modal_impacto_riesgo_escenario_2 #tipo_regla').val(regDat[0]["tipo_regla"])
+        $('#modal_impacto_riesgo_escenario_2 #tipo_valor').val(regDat[0]["tipo_valor"])
+        $('#modal_impacto_riesgo_escenario_2 #operador_1').val(regDat[0]["operador1"])
+        $('#modal_impacto_riesgo_escenario_2 #operador_2').val(regDat[0]["operador2"])
+        $('#modal_impacto_riesgo_escenario_2 #valor_1').val(regDat[0]["valor1"])
+        $('#modal_impacto_riesgo_escenario_2 #valor_2').val(regDat[0]["valor2"])
+        $('#modal_impacto_riesgo_escenario_2 #estado').val(regDat[0]["estado"])
+        $('#modal_impacto_riesgo_escenario_2 #comentario').val(regDat[0]["comentario"])
+    }
+})
 
-    document.getElementById("form_impacto_riesgo_escenario_1").reset();
-    document.getElementById("add_impacto_riego_escenario_1").style.display = "none";
-    document.getElementById("update_impacto_riego_escenario_1").style.display = "block";
-   
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showImpactoRiesgo/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1 option").remove()
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").append(`
-                <option value="1 Valor">1 Valor</option>
-                <option value="2 Valores">2 Valores</option>
-            `)
-            $("#modal_impacto_riesgo_escenario_1 #id_impacto_riesgo").val(event.currentTarget.getAttribute('data-id'));
-            $("#modal_impacto_riesgo_escenario_1 #descripcion_1").val(respuesta.data[0].descripcion);
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val(respuesta.data[0].tipo_regla);
-            $("#modal_impacto_riesgo_escenario_1 #tipo_valor_1").val(respuesta.data[0].tipo_valor);
-            $("#modal_impacto_riesgo_escenario_1 #estado_1").val(respuesta.data[0].estado);
-            $("#modal_impacto_riesgo_escenario_1 #comentario_1").val(respuesta.data[0].comentario);
-            $("#modal_impacto_riesgo_escenario_1 #formula_1").val(respuesta.data[0].formula);
-            if(respuesta.data[0].tipo_valor == "Formula"){
-                $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','block')
+document.getElementById('update_impacto_riego_escenario_2').addEventListener('click',function(){
+    $descripcion = $('#modal_impacto_riesgo_escenario_2 #descripcion').val()
+    $tipo_regla = $('#modal_impacto_riesgo_escenario_2 #tipo_regla').val()
+    $tipo_valor = $('#modal_impacto_riesgo_escenario_2 #tipo_valor').val()
+    $operador_1 = $('#modal_impacto_riesgo_escenario_2 #operador_1').val()
+    $valor_1 = $('#modal_impacto_riesgo_escenario_2 #valor_1').val()
+    $operador_2 = $('#modal_impacto_riesgo_escenario_2 #operador_2').val()
+    $valor_2 = $('#modal_impacto_riesgo_escenario_2 #valor_2').val()
+    $estado = $('#modal_impacto_riesgo_escenario_2 #estado').val()
+    $comentario = $('#modal_impacto_riesgo_escenario_2 #comentario').val()
+    let activesProb = 0
+    let activesImpacto = 0
+    if(
+        $descripcion != "" &&
+        $tipo_regla != "" &&
+        $tipo_valor != "" &&
+        $estado != "" &&
+        $comentario != "",
+        $operador_1 != "",
+        $operador_2 != "",
+        $valor_1 != "",
+        $valor_2 != ""
+    ){
+        const postData = {
+            id:$('#modal_impacto_riesgo_escenario_2 #id_impacto_riesgo').val(),
+            descripcion: $descripcion,
+            tipo_regla:$tipo_regla,
+            tipo_valor:$tipo_valor,
+            estado:$estado,
+            comentario:$comentario,
+            operador1:$operador_1,
+            valor1:$valor_1,
+            operador2:$operador_2,
+            valor2:$valor_2
+        }
+        $.ajax({
+            method:'POST',
+            url:BASE_URL+"/main/updateImpactoRiesgo2",
+            data:postData,
+            dataType:"JSON"
+        })
+        .done(function(respuesta){
+            console.log(respuesta)
+            if(!respuesta.error){
+                document.getElementById("form_impacto_riesgo_escenario_2").reset();
+                $('#modal_impacto_riesgo_escenario_2').modal('hide')
+                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    'Se ha modificado exitosamente'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                    '</div>';
+                $("#table_impacto_2").DataTable().ajax.reload(null, false); 
+                let p1 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActives/2",
+                    dataType:'json'
+                })
+                .done(function(resp){
+                    activesProb = resp.data.length
+                })
+                let p2 = $.ajax({
+                    method:'get',
+                    url:BASE_URL+"/main/getActivesImpacto/2",
+                    dataType:'json'
+                })
+                .done(function(res){
+                    activesImpacto = res.data.length
+                })
+                Promise.all([p1,p2]).then(resp => {
+                    if(activesImpacto > 0){
+                        activeScene2Impacto()
+                        escenario = 2
+                    }else{
+                        if(activesProb == 0){
+                            escenario = null
+                            noEsceneImpacto()
+                        }
+                    }
+                })
+
             }else{
-                $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','none')
-            }
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
-});
-$('#table_impacto_riesgo_2 tbody').on( 'click', 'editImpacto', function(event){
-    $("#modal_impacto_riesgo_escenario_1 #title_prob_riesgo_esc_1").html("Modificar Impacto de Riesgo")
-    document.getElementById("form_impacto_riesgo_escenario_1").reset();
-    document.getElementById("add_impacto_riego_escenario_1").style.display = "none";
-    document.getElementById("update_impacto_riego_escenario_1").style.display = "block";
-    $("#modal_impacto_riesgo_escenario_1 .escene_2").show();
-   
-    $.ajax({
-        method: "GET",
-        url: BASE_URL+"/main/showImpactoRiesgo/"+Number(event.currentTarget.getAttribute('data-id')),
-        dataType: "JSON",
-    })
-    .done(function(respuesta) {
-        console.log(respuesta)
-        if (respuesta.data != null) 
-        {
-            $("#modal_impacto_riesgo_escenario_1").modal("show");
-
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1 option").remove()
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").append(`
-                <option value="1 Valor">1 Valor</option>
-                <option value="2 Valores">2 Valores</option>
-            `)
-            $("#modal_impacto_riesgo_escenario_1 #id_impacto_riesgo").val(event.currentTarget.getAttribute('data-id'));
-            $("#modal_impacto_riesgo_escenario_1 #descripcion_1").val(respuesta.data[0].descripcion);
-            $("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val(respuesta.data[0].tipo_regla);
-            $("#modal_impacto_riesgo_escenario_1 #tipo_valor_1").val(respuesta.data[0].tipo_valor);
-            $("#modal_impacto_riesgo_escenario_1 #estado_1").val(respuesta.data[0].estado);
-            $("#modal_impacto_riesgo_escenario_1 #comentario_1").val(respuesta.data[0].comentario);
-            $("#modal_impacto_riesgo_escenario_1 #formula_1").val(respuesta.data[0].formula);
-            $("#modal_impacto_riesgo_escenario_1 #operador_1").val(respuesta.data[0].operador1);
-            $("#modal_impacto_riesgo_escenario_1 #operador_2").val(respuesta.data[0].operador2);
-            $("#modal_impacto_riesgo_escenario_1 #valor_1").val(respuesta.data[0].valor1);
-            $("#modal_impacto_riesgo_escenario_1 #valor_2").val(respuesta.data[0].valor2);
-            if(respuesta.data[0].tipo_valor == "Formula"){
-                $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','block')
-            }else{
-                $('#modal_impacto_riesgo_escenario_1 .formula_1').css('display','none')
-            }
-        } 
-        
-    })
-    .fail(function(error) {
-        console.log(error)
-    })
-});
-if(document.getElementById("update_impacto_riego_escenario_1")){
-    document.getElementById("update_impacto_riego_escenario_1").addEventListener("click", function(){
-        $descripcion=$("#modal_impacto_riesgo_escenario_1 #descripcion_1").val();
-        $tipo_regla=$("#modal_impacto_riesgo_escenario_1 #tipo_regla_1").val();
-        $tipo_valor=$("#modal_impacto_riesgo_escenario_1 #tipo_valor_1").val();
-        $estado=$("#modal_impacto_riesgo_escenario_1 #estado_1").val()
-        $comentario=$("#modal_impacto_riesgo_escenario_1 #comentario_1").val()
-        $formula = $("#modal_impacto_riesgo_escenario_1 #formula_1").val()
-        $operador_1 = ''
-        $operador_2 = ''
-        $valor_1 = ''
-        $valor_2 = ''
-        let passValidation = false
-        if(document.getElementById('operador_2')){
-            $operador_2=$("#modal_impacto_riesgo_escenario_1 #operador_2").val()
-        }
-        if(document.getElementById('operador_1')){
-            $operador_1=$("#modal_impacto_riesgo_escenario_1 #operador_1").val()
-        }
-        if(document.getElementById('valor_1')){
-            $valor_1=$("#modal_impacto_riesgo_escenario_1 #valor_1").val()
-        }
-        if(document.getElementById('valor_2')){
-            $valor_2=$("#modal_impacto_riesgo_escenario_1 #valor_2").val()
-        }
-        const id = document.getElementById("id_impacto_riesgo").value
-
-        if($tipo_regla == "1 Valor"){
-            if($descripcion != "" && $tipo_regla != "" && $tipo_valor != "" && $estado != "" && $comentario != ""){
-                passValidation = true
-                postData = { 
-                    id:id,
-                    descripcion:$descripcion,
-                    tipo_regla:$tipo_regla,
-                    tipo_valor:$tipo_valor,
-                    estado:$estado,
-                    comentario:$comentario,
-                    formula:$formula
-                };
-                uri = BASE_URL+"/main/updateImpactoRiesgo1"
-                $view = 1
-            }
-        }else{
-            if($descripcion != "" &&
-            $tipo_regla != "" &&
-            $tipo_valor != "" &&
-            $estado != "" &&
-            $operador_1 != "" &&
-            $valor_1 != "" &&
-            $valor_2 != "" &&
-            $comentario != ""
-            ){
-                passValidation = true
-                postData = { 
-                    id:id,
-                    descripcion:$descripcion,
-                    tipo_regla:$tipo_regla,
-                    tipo_valor:$tipo_valor,
-                    estado:$estado,
-                    operador1:$operador_1,
-                    valor1:$valor_1,
-                    operador2:$operador_2,
-                    valor2:$valor_2,
-                    comentario:$comentario,
-                    formula:$formula
-                };
-                uri = BASE_URL+"/main/updateImpactoRiesgo2"
-                $view = 2
-            }
-        }
-        if(passValidation){
-            try {
-    
-                $.ajax({
-                    method: "POST",
-                    url: uri,
-                    data: postData,
-                    dataType: "JSON"
-                })
-                .done(function(respuesta) {
-                    if (respuesta) 
-                    {
-                        console.log($view)
-                        document.getElementById("form_impacto_riesgo_escenario_1").reset();
-                        $('#modal_impacto_riesgo_escenario_1').modal('hide');
-                        alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                        'Se ha modificado exitosamente'+
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                            '<span aria-hidden="true">&times;</span>'+
-                            '</button>'+
-                        '</div>';
-                        $("#table_impacto_riesgo_"+$view).DataTable().ajax.reload(null, false); 
-                       
-                    } 
-                    
-                })
-                .fail(function(error) {
-                    console.log(error)
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
-                    })
-                })
-                .always(function() {
-                });
-            }
-            catch(err) {
-                console.log(err)
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
-                })
+                    text: respuesta.msg
+                }) 
             }
-    
-        }else{
+        })
+        .fail(function(error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Faltan Datos'
+                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
             })
+        })
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Faltan Datos'
+        })
+    }
+})
+$('#table_impacto_2 tbody').on( 'click', 'deleteImpacto2', function(event){
+
+    let id = event.currentTarget.getAttribute('data-id')
+    Swal.fire({
+        title: 'Desea eliminar el impacto de riesgo?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        denyButtonText: `Cancel`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                method: "post",
+                url: BASE_URL+"/main/deleteImpactoRiesgo/"+Number(id),
+                dataType: "JSON"
+            })
+            .done(function(respuesta) {
+                if (!respuesta.error) 
+                {
+                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                    'Se ha eliminado satisfactoriamente'+
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                        '<span aria-hidden="true">&times;</span>'+
+                        '</button>'+
+                    '</div>';
+                    $("#table_impacto_2").DataTable().ajax.reload(null, false);
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/2",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/2",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(resp => {
+                        if(activesImpacto > 0){
+                            activeScene2Impacto()
+                            escenario = 2
+                        }else{
+                            if(activesProb == 0){
+                                escenario = null
+                                noEsceneImpacto()
+                            }
+                        }
+                    })
+                } 
+                
+            })
+            .fail(function(error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo eliminar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
+            })
+            .always(function() {
+            });
+        } else if (result.isDenied) {
+            Swal.fire('No hubo ningún cambio', '', 'info')
         }
-    });
+    })
+    
+});
+
+function noEsceneImpacto(){
+    $('#btn_add_impacto_2').css('display','none')
+    $('#btn_add_impacto_1').css('display','block')
+    $('#impacto-2-tab').attr('disabled',false)
+    $('#impacto-2-tab').removeClass('active')
+    $('#impacto-1-tab').attr('disabled',false)
+    $('#impacto-1-tab').addClass('active')
+    $('#impacto-1-tab-pane').addClass('show')
+    $('#impacto-1-tab-pane').addClass('active')
+    $('#impacto-2-tab-pane').removeClass('active')
+    $('#impacto-2-tab-pane').removeClass('show')
 }
-
-$('#table_impacto_riesgo_1 tbody').on( 'click', 'deleteImpacto', function(event){
-
-    //recuperando los datos
-    var table = $('#table_impacto_riesgo_1').DataTable();
-    var regNum = table.rows( $(this).parents('tr') ).count().toString();
-    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
-    let id = 0
-    console.log(regNum)
-    if (regNum == '0') {
-        //console.log("error");
-    }else{
-        console.log(regDat)
-        id=event.currentTarget.getAttribute('data-id');
-    }
-    console.log(id)
-    Swal.fire({
-        title: 'Desea eliminar el impacto de riesgo?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Aceptar',
-        denyButtonText: `Cancel`,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                method: "DELETE",
-                url: BASE_URL+"/main/deleteImpactoRiesgo/"+Number(id),
-                dataType: "JSON"
-            })
-            .done(function(respuesta) {
-                if (respuesta) 
-                {
-                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha eliminado satisfactoriamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                    $("#table_impacto_riesgo_1").DataTable().ajax.reload(null, false); 
-                   
-                } 
-                
-            })
-            .fail(function(error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo eliminar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
-                })
-            })
-            .always(function() {
-            });
-        } else if (result.isDenied) {
-            Swal.fire('No hubo ningún cambio', '', 'info')
-        }
-    })
-    
-});
-$('#table_impacto_riesgo_2 tbody').on( 'click', 'deleteImpacto', function(event){
-
-    //recuperando los datos
-    var table = $('#table_impacto_riesgo_2').DataTable();
-    var regNum = table.rows( $(this).parents('tr') ).count().toString();
-    var regDat = table.rows( $(this).parents('tr') ).data().toArray();
-    let id = 0
-    console.log(regNum)
-    if (regNum == '0') {
-        //console.log("error");
-    }else{
-        console.log(regDat)
-        id=event.currentTarget.getAttribute('data-id');
-    }
-    console.log(id)
-    Swal.fire({
-        title: 'Desea eliminar el impacto de riesgo?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Aceptar',
-        denyButtonText: `Cancel`,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                method: "DELETE",
-                url: BASE_URL+"/main/deleteImpactoRiesgo/"+Number(id),
-                dataType: "JSON"
-            })
-            .done(function(respuesta) {
-                if (respuesta) 
-                {
-                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha eliminado satisfactoriamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                    $("#table_impacto_riesgo_2").DataTable().ajax.reload(null, false); 
-                   
-                } 
-                
-            })
-            .fail(function(error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo eliminar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
-                })
-            })
-            .always(function() {
-            });
-        } else if (result.isDenied) {
-            Swal.fire('No hubo ningún cambio', '', 'info')
-        }
-    })
-    
-});
+function activeScene1Impacto(){
+    $('#btn_add_impacto_2').css('display','none')
+    $('#btn_add_impacto_1').css('display','block')
+    $('#impacto-2-tab').attr('disabled',true)
+    $('#impacto-2-tab').removeClass('active')
+    $('#impacto-1-tab').attr('disabled',false)
+    $('#impacto-1-tab').addClass('active')
+    $('#impacto-1-tab-pane').addClass('show')
+    $('#impacto-1-tab-pane').addClass('active')
+    $('#impacto-2-tab-pane').removeClass('show')
+    $('#impacto-2-tab-pane').removeClass('active')
+}
+function activeScene2Impacto(){
+    $('#btn_add_impacto_1').css('display','none')
+    $('#btn_add_impacto_2').css('display','block')
+    $('#impacto-1-tab').attr('disabled',true)
+    $('#impacto-1-tab').removeClass('active')
+    $('#impacto-2-tab').attr('disabled',false)
+    $('#impacto-2-tab').addClass('active')
+    $('#impacto-2-tab-pane').addClass('show')
+    $('#impacto-2-tab-pane').addClass('active')
+    $('#impacto-1-tab-pane').removeClass('show')
+    $('#impacto-1-tab-pane').removeClass('active')
+}

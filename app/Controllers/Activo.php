@@ -1009,6 +1009,17 @@ class Activo extends BaseController {
               }
             }
         }
+        public function getPosicionByArea($area_id){
+          if($this->session->logged_in){
+            $get_endpoint = '/api/getPosicionByArea/'.$area_id;
+
+            $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+            if($response){
+            
+              echo json_encode($response);
+            }
+          }
+        }
         public function getPosicionByActivo(){
           if($this->session->logged_in){
             $get_endpoint = '/api/getPosicionByActivo';
@@ -1422,4 +1433,288 @@ class Activo extends BaseController {
         }
       }
   }
+  //------------------------------------------------------------
+
+public function getEstado(){
+  if($this->session->logged_in){
+    $get_endpoint = '/api/getEstado';
+
+    $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+    if($response){
+     
+      echo json_encode($response);
+    }
   }
+}
+
+public function addEstado() {
+  // helper(['curl']);
+  if($this->session->logged_in){
+    if(!$this->request->getPost())
+    {
+      return redirect()->to(base_url('/activo'));
+    }else{
+  
+        $post_endpoint = '/api/addEstado';
+
+        $request_data =
+        $request_data = [
+            $this->request->getPost(),
+            'user' =>$this->session->id
+        ];
+       
+        $response = (perform_http_request('POST', REST_API_URL . $post_endpoint,$request_data));
+      
+        
+          if($response){
+              echo json_encode($response);
+          
+          }else{
+            echo json_encode(false);
+          }
+     
+      
+    }
+  }
+}
+
+public function updateEstado() {
+  // helper(['curl']);
+ 
+    if (!$this->session->logged_in) {        
+        return redirect()->to(base_url('/activo'));
+    } else {        
+        if ($this->request->getPost()) {
+            
+            $post_endpoint = '/api/updateEstado';            
+            $request_data = [
+                $this->request->getPost(),
+                'user' => $this->session->id
+            ];
+            $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
+            if ($response) {
+                echo json_encode($response);
+            } else {
+                echo json_encode(false);
+            }
+        }
+    }
+}
+
+public function deleteEstado() {    
+  
+    if (!$this->session->logged_in) {        
+      return redirect()->to(base_url('/activo'));
+    } else {        
+      if ($this->request->getPost()) {
+          
+          $post_endpoint = '/api/deleteEstado';
+          $post_data = $this->request->getPost();          
+          $request_data = [
+              $post_data,
+              'id' => $this->session->id 
+          ];
+          $response = perform_http_request('DELETE', REST_API_URL . $post_endpoint, $request_data);
+          if ($response) {
+              echo json_encode($response);
+          } else {
+              echo json_encode(false);
+          }
+      }
+    }
+}
+
+public function getPrioridad(){
+  if($this->session->logged_in){
+    $get_endpoint = '/api/getPrioridad';
+
+    $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+    if($response){
+     
+      echo json_encode($response);
+    }
+  }
+}
+
+public function addPrioridad() {
+  // helper(['curl']);
+  if($this->session->logged_in){
+    if(!$this->request->getPost())
+    {
+      return redirect()->to(base_url('/activo'));
+    }else{
+  
+        $post_endpoint = '/api/addPrioridad';
+
+        $request_data =
+        $request_data = [
+            $this->request->getPost(),
+            'user' =>$this->session->id
+        ];
+       
+        $response = (perform_http_request('POST', REST_API_URL . $post_endpoint,$request_data));
+      
+        
+          if($response){
+              echo json_encode($response);
+          
+          }else{
+            echo json_encode(false);
+          }
+     
+      
+    }
+  }
+}
+  
+public function updatePrioridad() {
+  // helper(['curl']);
+  if (!$this->session->logged_in) {        
+    return redirect()->to(base_url('/activo'));
+    } else {        
+    if ($this->request->getPost()) {
+        
+        $post_endpoint = '/api/updatePrioridad';            
+        $request_data = [
+            $this->request->getPost(),
+            'user' => $this->session->id
+        ];
+        $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
+        if ($response) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(false);
+        }
+      }
+    }
+  
+}
+
+public function deletePrioridad(){
+  if (!$this->session->logged_in) {        
+    return redirect()->to(base_url('/activo'));
+  } else {        
+    if ($this->request->getPost()) {
+        
+        $post_endpoint = '/api/deletePrioridad';
+        $post_data = $this->request->getPost();          
+        $request_data = [
+            $post_data,
+            'id' => $this->session->id 
+        ];
+        $response = perform_http_request('DELETE', REST_API_URL . $post_endpoint, $request_data);
+        if ($response) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(false);
+        }
+    }
+  }
+}
+
+
+public function getAlerta_seguimiento(){
+  if($this->session->logged_in){
+    $get_endpoint = '/api/getAlerta_seguimiento';
+
+    $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+    if($response){
+     
+      echo json_encode($response);
+    }
+  }
+}
+
+public function addAlerta_seguimiento() {
+  // helper(['curl']);
+  if($this->session->logged_in){
+    if(!$this->request->getPost())
+    {
+      return redirect()->to(base_url('/activo'));
+    }else{
+  
+        $post_endpoint = '/api/addAlerta_seguimiento';
+
+        $request_data =
+        $request_data = [
+            $this->request->getPost(),
+            'user' =>$this->session->id
+        ];
+       
+        $response = (perform_http_request('POST', REST_API_URL . $post_endpoint,$request_data));
+      
+        
+          if($response){
+              echo json_encode($response);
+          
+          }else{
+            echo json_encode(false);
+          }
+     
+      
+    }
+  }
+}
+
+
+public function updateAlerta_seguimiento() {
+  // helper(['curl']);
+  if (!$this->session->logged_in) {        
+    return redirect()->to(base_url('/activo'));
+    } else {        
+    if ($this->request->getPost()) {
+        
+        $post_endpoint = '/api/updateAlerta_seguimiento';            
+        $request_data = [
+            $this->request->getPost(),
+            'user' => $this->session->id
+        ];
+        $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
+        if ($response) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(false);
+        }
+      }
+  }
+   
+}
+
+public function deleteAlerta_seguimiento(){
+  if (!$this->session->logged_in) {        
+    return redirect()->to(base_url('/activo'));
+  } else {        
+    if ($this->request->getPost()) {
+        
+        $post_endpoint = '/api/deleteAlerta_seguimiento';
+        $post_data = $this->request->getPost();          
+        $request_data = [
+            $post_data,
+            'id' => $this->session->id 
+        ];
+        $response = perform_http_request('DELETE', REST_API_URL . $post_endpoint, $request_data);
+        if ($response) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(false);
+        }
+    }
+  }
+}
+
+
+//-------------------RIESGO PLAN DE ACCIÓN-----------------------------------------
+
+
+public function getPlanAccion(){
+  if($this->session->logged_in){
+    $get_endpoint = '/api/getPlanAccion';
+
+    $response =perform_http_request('GET', REST_API_URL . $get_endpoint,[]);
+    if($response){
+     
+      echo json_encode($response);
+    }
+  }
+  }
+}

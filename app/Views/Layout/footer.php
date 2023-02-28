@@ -36,7 +36,9 @@
         <script src="<?=base_url('public/assets/libs/twitter-bootstrap-wizard/prettify.js'); ?>"></script>
         <script src="<?=base_url('public/assets/js/pages/form-wizard.init.js'); ?>"></script>
         <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+
+       
     
     
            

@@ -85,19 +85,39 @@ File: Main Css File
   padding: 5px;
   padding-left: 20px;
 }
-.menu .activado{
+/* .menu .activado{
   background: #165094;
 
+} */
+.table_matriz{
+  table-layout: fixed;
+  width: 100%;
 }
-.menu .activado a{
+.opciones{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.table_matriz th, td {
+  text-align: center;
+  border: 1px solid #ccc;
+  /* width: 100px; */
+  word-wrap: break-word;
+}
+/* .menu .activado a{
   color: #fff;
 }
 .menu li:hover{
   background: #165094;
- 
-}
-.menu li a:hover{
   color: #fff;
+} */
+.cajitas{
+  display: flex;
+}
+
+
+.menu li a:hover{
+  /* color: #fff; */
 }
 .table-responsive table tbody tr td{
  font-size: 10pt;

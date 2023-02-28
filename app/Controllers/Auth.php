@@ -77,7 +77,9 @@ class Auth extends BaseController {
                   'change'=> false,
                   'id' => $response->id,
                   'token' => $response->access_token->jwt,
+                  'escenario' => $response->escenario,
                   'permisos' => $response->permisos,
+                  'is_user_negocio' => $response->is_user_negocio
                 ];
                
               }else{
@@ -87,6 +89,9 @@ class Auth extends BaseController {
                   'change' => true,
                   'id' => $response->id,
                   'token' => $response->access_token->jwt,
+                  'escenario' => $response->escenario,
+
+                  'is_user_negocio' => $response->is_user_negocio
                 ];
                 
               }

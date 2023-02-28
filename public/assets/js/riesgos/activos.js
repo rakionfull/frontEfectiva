@@ -3,6 +3,23 @@ window.addEventListener("hashchange", () => {
     let opcion = window.location.hash;
     switch(opcion)
     {
+        case "#/ValoracionRiesgo":
+            for(let i=0; i<document.getElementsByClassName("opcion").length; i++){
+                document.getElementsByClassName("opcion")[i].style.display = "none";
+            }
+            document.querySelectorAll(".menu li").forEach(element => {
+                element.classList.remove("activado");
+            });
+            document.getElementById("apartValoracionRiesgo").style.display = "block";
+            document.getElementById("apartMatriz").style.display = "block";
+
+            document.getElementById("ValoracionRiesgo").className = "activado";
+            loadTableValoracionRiesgo();
+            cargarProbabilidadRiesgo();
+            cargarImpactoRiesgo();
+            cargarMatrisRiesgo();
+            window.location.hash = '#';
+        break;
         case "#/TipoRiesgo":
             for(let i=0; i<document.getElementsByClassName("opcion").length; i++){
                 document.getElementsByClassName("opcion")[i].style.display = "none";
@@ -25,21 +42,20 @@ window.addEventListener("hashchange", () => {
             document.getElementById("apartProbabilidadRiesgo").style.display = "block";
             document.getElementById("probabilidad_riesgo").className = "activado";
             window.location.hash = '#';
-            if(count >= 1){
-                $('#apartProbabilidadRiesgo #escenario-1-tab-pane').addClass('show')
-                $('#apartProbabilidadRiesgo #escenario-1-tab-pane').addClass('active')
-                $('#apartProbabilidadRiesgo #escenario-2-tab-pane').removeClass('show')
-                $('#apartProbabilidadRiesgo #escenario-2-tab-pane').removeClass('active')
-
+            if(escenario == null){
+                noEscene()
             }else{
-                $('#apartProbabilidadRiesgo #escenario-2-tab-pane').addClass('show')
-                $('#apartProbabilidadRiesgo #escenario-2-tab-pane').addClass('active')
-                $('#apartProbabilidadRiesgo #escenario-1-tab-pane').removeClass('show')
-                $('#apartProbabilidadRiesgo #escenario-1-tab-pane').removeClass('active')
+                if(escenario == 2){
+                    activeScene2()
+                }else{
+                    if(escenario == 1){
+                        activeScene1()
+                    }
+                }
             }
 
-            loadTableProabilidadRiesgo()
-            loadTableProabilidadRiesgo2()
+            loadTableProbabilidad1()
+            loadTableProbabilidad2()
             break;
         case "#/ImpactoRiesgo":
             for(let i=0; i<document.getElementsByClassName("opcion").length; i++){
@@ -51,21 +67,20 @@ window.addEventListener("hashchange", () => {
             document.getElementById("apartImpactoRiesgo").style.display = "block";
             document.getElementById("impacto_riesgo").className = "activado";
             window.location.hash = '#';
-            console.log(count_impacto)
-            if(count_impacto >= 1){
-                $('#apartImpactoRiesgo #escenario-1-tab-pane').addClass('show')
-                $('#apartImpactoRiesgo #escenario-1-tab-pane').addClass('active')
-                $('#apartImpactoRiesgo #escenario-2-tab-pane').removeClass('show')
-                $('#apartImpactoRiesgo #escenario-2-tab-pane').removeClass('active')
-
+            console.log("Escenario",escenario)
+            loadTableImpacto1()
+            loadTableImpacto2()
+            if(escenario == null){
+                noEsceneImpacto()
             }else{
-                $('#apartImpactoRiesgo #escenario-2-tab-pane').addClass('show')
-                $('#apartImpactoRiesgo #escenario-2-tab-pane').addClass('active')
-                $('#apartImpactoRiesgo #escenario-1-tab-pane').removeClass('show')
-                $('#apartImpactoRiesgo #escenario-1-tab-pane').removeClass('active')
+                if(escenario == 2){
+                    activeScene2Impacto()
+                }else{
+                    if(escenario == 1){
+                       activeScene1Impacto()
+                    }
+                }
             }
-            loadTableImpactoRiesgo()
-            loadTableImpactoRiesgo2()
             break;
         
         case "#/NivelRiesgo":
