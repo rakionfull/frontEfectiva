@@ -1007,6 +1007,7 @@ function changeStatus(arg){
                 dataType: "JSON"
             })
             .done(function(respuesta) {
+                console.log(respuesta)
                 $("#table_inventario_clasificacion_activo").DataTable().ajax.reload(null, false);
                 $('.wrapper_buttons_status').css('display','none')
                 document.getElementById('check_ica_all').checked = false

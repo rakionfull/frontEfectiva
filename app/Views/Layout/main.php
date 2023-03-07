@@ -128,7 +128,7 @@ $session = session();?>
                                         <li><a href="<?=base_url('inventario-clasificacion-activos') ?>">Inventario y clasificación de activos</a></li>
                                     <?php }?>
                                     <?php if($session->permisos[11]->view_det==1){ ?>
-                                        <li><a href="<?=base_url('') ?>">Evaluación de Riesgos SI-C</a></li>
+                                        <li><a href="<?=base_url('evaluacion-riesgos') ?>">Evaluación de Riesgos SI-C</a></li>
                                     <?php }?>
                                     <?php if($session->permisos[12]->view_det==1){ ?>
                                         <li><a href="<?=base_url('') ?>">Registro de Controles</a></li>

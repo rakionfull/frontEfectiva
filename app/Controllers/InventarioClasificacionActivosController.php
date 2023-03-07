@@ -97,6 +97,28 @@ class InventarioClasificacionActivosController extends BaseController
             }
         }
     }
+    public function updateStatus($id)
+    {
+        if ($this->session->logged_in) {
+            if (!$this->request->getPost()) {
+                return redirect()->to(base_url('/inventario-clasificacion-activos'));
+            } else {
+                $currentDate = date("Y-m-d H:i:s");
+                $post_endpoint = '/api/updateStatus/'.$id;
+                $request_data = [];
+                $request_data = $this->request->getPost();
+                $request_data['id_user_updated'] = $this->session->id;
+                $request_data['date_modify'] = $currentDate;
+                $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
+
+                if ($response) {
+                    echo json_encode($response);
+                } else {
+                    echo json_encode(false);
+                }
+            }
+        }
+    }
 
     public function delete($id)
     {

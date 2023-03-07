@@ -106,6 +106,8 @@ document.getElementById("btn_add_probabilidad_1").addEventListener('click',funct
     document.getElementById("form_probabilidad_riesgo_escenario_1").reset();
     document.getElementById("add_probabilidad_riego_escenario_1").style.display = "block";
     document.getElementById("update_probabilidad_riego_escenario_1").style.display = "none";
+    $('#modal_probabilidad_riesgo_escenario_1 .formula_1_probabilidad').css('display','none')
+    $('#modal_probabilidad_riesgo_escenario_1 #group_condicionales_formula .group_formula').remove()
 })
 document.getElementById('add_probabilidad_riego_escenario_1').addEventListener('click',function(){
     $descripcion = $('#modal_probabilidad_riesgo_escenario_1 #descripcion').val()
@@ -113,7 +115,20 @@ document.getElementById('add_probabilidad_riego_escenario_1').addEventListener('
     $tipo_valor = $('#modal_probabilidad_riesgo_escenario_1 #tipo_valor').val()
     $estado = $('#modal_probabilidad_riesgo_escenario_1 #estado').val()
     $comentario = $('#modal_probabilidad_riesgo_escenario_1 #comentario').val()
-    $formula = $('#modal_probabilidad_riesgo_escenario_1 #formula').val()
+    $items_formula = $('#modal_probabilidad_riesgo_escenario_1 .group_formula ')
+    let formula = ''
+    if($items_formula.length > 0){
+        $items_formula.map((index,element) => {
+            let operador = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #operador_formula_1`).val()
+            let valor = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #value_formula_1`).val()
+            let resultado = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #resultado_formula_1`).val()
+            if(index == 0){            
+                formula = formula + (operador+' '+valor+' '+resultado)
+            }else{
+                formula = formula + ' '+ (operador+' '+valor+' '+resultado)
+            }
+        });
+    }
     let activesProb = 0
     let activesImpacto = 0
     if(
@@ -129,7 +144,7 @@ document.getElementById('add_probabilidad_riego_escenario_1').addEventListener('
             tipo_valor:$tipo_valor,
             estado:$estado,
             comentario:$comentario,
-            formula:$formula
+            formula:formula
         }
         $.ajax({
             method:'POST',
@@ -202,6 +217,8 @@ document.getElementById('add_probabilidad_riego_escenario_1').addEventListener('
 })
 
 $('#table_probabilidad_1 tbody').on('click','editProbabilidad1',function(){
+    $('#modal_probabilidad_riesgo_escenario_1 .formula_1_probabilidad').css('display','none')
+
     $('#modal_probabilidad_riesgo_escenario_1').modal('show')
     document.getElementById("title_prob_riesgo_esc_1").innerHTML = "Modificar Probabilidad de Riesgo Escenario 1";
     document.getElementById("form_probabilidad_riesgo_escenario_1").reset();
@@ -211,8 +228,42 @@ $('#table_probabilidad_1 tbody').on('click','editProbabilidad1',function(){
     var table = $('#table_probabilidad_1').DataTable();
     var regNum = table.rows( $(this).parents('tr') ).count().toString();
     var regDat = table.rows( $(this).parents('tr') ).data().toArray();
-    console.log(regNum)
-    console.log(this)
+    let formula = regDat[0]['formula']
+    console.log(regDat[0]["tipo_valor"])
+    if(regDat[0]["tipo_valor"] == "Formula"){
+        $('#modal_probabilidad_riesgo_escenario_1 .formula_1_probabilidad').css('display','block')
+        let split_formula = formula.split(" ")
+        let count = 1
+        if(split_formula.length > 0){
+            $('#modal_probabilidad_riesgo_escenario_1 #group_condicionales_formula .group_formula').remove()
+            for (let index = 0; index < split_formula.length; index=index+3) {
+                $('#modal_probabilidad_riesgo_escenario_1 #group_condicionales_formula').append(`
+                    <div class="row group_formula mt-2 group_formula_${count}">
+                        <div class="col-md-3">
+                            <select value="${split_formula[index]}" id="operador_formula_1" class="form-control form-control-sm">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                                <option value=">=">>=</option>
+                                <option value="<"><</option>
+                                <option value="<="><=</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input value="${split_formula[index+1]}" type="number" id="value_formula_1" class="form-control form-control-sm"/>
+                        </div>
+                        <div class="col-md-3">
+                            <input value="${split_formula[index+2]}" type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+                        </div>
+                        <div class="col-md-3">
+                            <button onclick="delete_row_formula_prob(this)" index=${count} type="button" class="form-control form-control-sm" id="btn_delete_row_formula">X</button>
+                        </div>
+                    </div>
+                `)
+                count++
+            }
+        }
+        console.log(split_formula)
+    }
     if (regNum == '0') {
         //console.log("error");
     }else{
@@ -222,7 +273,6 @@ $('#table_probabilidad_1 tbody').on('click','editProbabilidad1',function(){
         $('#modal_probabilidad_riesgo_escenario_1 #tipo_valor').val(regDat[0]["tipo_valor"])
         $('#modal_probabilidad_riesgo_escenario_1 #estado').val(regDat[0]["estado"])
         $('#modal_probabilidad_riesgo_escenario_1 #comentario').val(regDat[0]["comentario"])
-        $('#modal_probabilidad_riesgo_escenario_1 #formula').val(regDat[0]["formula"])
     }
 })
 $('#update_probabilidad_riego_escenario_1').click(function(){
@@ -231,7 +281,21 @@ $('#update_probabilidad_riego_escenario_1').click(function(){
     $tipo_valor = $('#modal_probabilidad_riesgo_escenario_1 #tipo_valor').val()
     $estado = $('#modal_probabilidad_riesgo_escenario_1 #estado').val()
     $comentario = $('#modal_probabilidad_riesgo_escenario_1 #comentario').val()
-    $formula = $('#modal_probabilidad_riesgo_escenario_1 #formula').val()
+    $items_formula = $('#modal_probabilidad_riesgo_escenario_1 .group_formula ')
+    let formula = ''
+    if($items_formula.length > 0){
+        $items_formula.map((index,element) => {
+            let operador = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #operador_formula_1`).val()
+            let valor = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #value_formula_1`).val()
+            let resultado = $(`#modal_probabilidad_riesgo_escenario_1  .group_formula_${index+1} #resultado_formula_1`).val()
+            if(index == 0){            
+                formula = formula + (operador+' '+valor+' '+resultado)
+            }else{
+                formula = formula + ' '+ (operador+' '+valor+' '+resultado)
+            }
+        });
+    }
+    console.log(formula)
     let activesProb = 0
     let activesImpacto = 0
     if(
@@ -248,7 +312,7 @@ $('#update_probabilidad_riego_escenario_1').click(function(){
             tipo_valor:$tipo_valor,
             estado:$estado,
             comentario:$comentario,
-            formula:$formula
+            formula:formula
         }
         $.ajax({
             method:'POST',
@@ -475,6 +539,26 @@ function loadTableProbabilidad2(){
 }
 
 document.getElementById("btn_add_probabilidad_2").addEventListener('click',function(){
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_1 option').remove()
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_1').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_2 option').remove()
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_2').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
     $('#modal_probabilidad_riesgo_escenario_2').modal('show')
     document.getElementById("title_prob_riesgo_esc_2").innerHTML = "Agregar Probabilidad de Riesgo Escenario 2";
     document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
@@ -505,87 +589,115 @@ document.getElementById('add_probabilidad_riego_escenario_2').addEventListener('
         $valor_1 != "",
         $valor_2 != ""
     ){
-        const postData = {
-            descripcion: $descripcion,
-            tipo_regla:$tipo_regla,
-            tipo_valor:$tipo_valor,
-            estado:$estado,
-            comentario:$comentario,
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2
-        }
-        $.ajax({
-            method:'POST',
-            url:BASE_URL+"/main/addProbabilidadRiesgo2",
-            data:postData,
-            dataType:"JSON"
-        })
-        .done(function(respuesta){
-            console.log(respuesta)
-            if(!respuesta.error){
-                document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
-                $('#modal_probabilidad_riesgo_escenario_2').modal('hide')
-                alerta_probabilidad_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha guardado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                $("#table_probabilidad_2").DataTable().ajax.reload(null, false);
-                let p1 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActives/2",
-                    dataType:'json'
-                })
-                .done(function(resp){
-                    activesProb = resp.data.length
-                })
-                let p2 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActivesImpacto/2",
-                    dataType:'json'
-                })
-                .done(function(res){
-                    activesImpacto = res.data.length
-                })
-                Promise.all([p1,p2]).then(respuesta => {
-                    if(activesProb > 0){
-                        activeScene2()
-                        escenario = 2
-                    }else{
-                        if(activesImpacto == 0){
-                            escenario = null
-                            noEscene()
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
+            const postData = {
+                descripcion: $descripcion,
+                tipo_regla:$tipo_regla,
+                tipo_valor:$tipo_valor,
+                estado:$estado,
+                comentario:$comentario,
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2
+            }
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/main/addProbabilidadRiesgo2",
+                data:postData,
+                dataType:"JSON"
+            })
+            .done(function(respuesta){
+                console.log(respuesta)
+                if(!respuesta.error){
+                    document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
+                    $('#modal_probabilidad_riesgo_escenario_2').modal('hide')
+                    alerta_probabilidad_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha guardado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                    $("#table_probabilidad_2").DataTable().ajax.reload(null, false);
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/2",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/2",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(respuesta => {
+                        if(activesProb > 0){
+                            activeScene2()
+                            escenario = 2
+                        }else{
+                            if(activesImpacto == 0){
+                                escenario = null
+                                noEscene()
+                            }
                         }
-                    }
-                })
-            }else{
+                    })
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: respuesta.msg
+                    }) 
+                }
+            })
+            .fail(function(error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: respuesta.msg
-                }) 
-            }
-        })
-        .fail(function(error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
             })
-        })
+        }else{
+            Swal.fire({
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
+            }) 
+        }
     }else{
         Swal.fire({
-            icon: 'error',
-            title: 'Error',
+            icon: 'warning',
+            title: 'Opps',
             text: 'Faltan Datos'
         })
     }
 })
 
 $('#table_probabilidad_2 tbody').on('click','editProbabilidad2',function(){
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_1 option').remove()
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_1').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_2 option').remove()
+    $('#modal_probabilidad_riesgo_escenario_2 #operador_2').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
     $('#modal_probabilidad_riesgo_escenario_2').modal('show')
     document.getElementById("title_prob_riesgo_esc_2").innerHTML = "Modificar Probabilidad de Riesgo Escenario 2";
     document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
@@ -634,79 +746,88 @@ document.getElementById('update_probabilidad_riego_escenario_2').addEventListene
         $valor_1 != "",
         $valor_2 != ""
     ){
-        const postData = {
-            id:$('#modal_probabilidad_riesgo_escenario_2 #id_probabilidad_riesgo').val(),
-            descripcion: $descripcion,
-            tipo_regla:$tipo_regla,
-            tipo_valor:$tipo_valor,
-            estado:$estado,
-            comentario:$comentario,
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2
-        }
-        $.ajax({
-            method:'POST',
-            url:BASE_URL+"/main/updateProbabilidadRiesgo2",
-            data:postData,
-            dataType:"JSON"
-        })
-        .done(function(respuesta){
-            console.log(respuesta)
-            if(!respuesta.error){
-                document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
-                $('#modal_probabilidad_riesgo_escenario_2').modal('hide')
-                alerta_probabilidad_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha modificado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                $("#table_probabilidad_2").DataTable().ajax.reload(null, false);
-                let p1 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActives/2",
-                    dataType:'json'
-                })
-                .done(function(resp){
-                    activesProb = resp.data.length
-                })
-                let p2 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActivesImpacto/2",
-                    dataType:'json'
-                })
-                .done(function(res){
-                    activesImpacto = res.data.length
-                })
-                Promise.all([p1,p2]).then(response => {
-                    if(activesProb > 0){
-                        activeScene2()
-                        escenario = 2
-                    }else{
-                        if(activesImpacto == 0){
-                            escenario = null
-                            noEscene()
-                        }
-                    }
-                })
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
 
-            }else{
+            const postData = {
+                id:$('#modal_probabilidad_riesgo_escenario_2 #id_probabilidad_riesgo').val(),
+                descripcion: $descripcion,
+                tipo_regla:$tipo_regla,
+                tipo_valor:$tipo_valor,
+                estado:$estado,
+                comentario:$comentario,
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2
+            }
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/main/updateProbabilidadRiesgo2",
+                data:postData,
+                dataType:"JSON"
+            })
+            .done(function(respuesta){
+                console.log(respuesta)
+                if(!respuesta.error){
+                    document.getElementById("form_probabilidad_riesgo_escenario_2").reset();
+                    $('#modal_probabilidad_riesgo_escenario_2').modal('hide')
+                    alerta_probabilidad_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha modificado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                    $("#table_probabilidad_2").DataTable().ajax.reload(null, false);
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/2",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/2",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(response => {
+                        if(activesProb > 0){
+                            activeScene2()
+                            escenario = 2
+                        }else{
+                            if(activesImpacto == 0){
+                                escenario = null
+                                noEscene()
+                            }
+                        }
+                    })
+    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: respuesta.msg
+                    }) 
+                }
+            })
+            .fail(function(error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: respuesta.msg
-                }) 
-            }
-        })
-        .fail(function(error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
             })
-        })
+        }else{
+            Swal.fire({
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
+            })
+        }
     }else{
         Swal.fire({
             icon: 'error',
@@ -823,4 +944,110 @@ function activeScene2(){
     $('#probabilidad-2-tab-pane').addClass('active')
     $('#probabilidad-1-tab-pane').removeClass('show')
     $('#probabilidad-1-tab-pane').removeClass('active')
+}
+
+$('#modal_probabilidad_riesgo_escenario_2 #operador_1').change(function(){
+    let option =$('#modal_probabilidad_riesgo_escenario_2 #operador_1').val()
+    if(option == ">" || option == ">="){
+        $('#modal_probabilidad_riesgo_escenario_2 #operador_2 option').remove()
+        $('#modal_probabilidad_riesgo_escenario_2 #operador_2').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_probabilidad_riesgo_escenario_2 #operador_2 option').remove()
+            $('#modal_probabilidad_riesgo_escenario_2 #operador_2').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+$('#modal_probabilidad_riesgo_escenario_2 #operador_2').change(function(){
+    let option =$('#modal_probabilidad_riesgo_escenario_2 #operador_2').val()
+    if(option == ">" || option == ">="){
+        $('#modal_probabilidad_riesgo_escenario_2 #operador_1 option').remove()
+        $('#modal_probabilidad_riesgo_escenario_2 #operador_1').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_probabilidad_riesgo_escenario_2 #operador_1 option').remove()
+            $('#modal_probabilidad_riesgo_escenario_2 #operador_1').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+
+function validateOperators(operador1,valor1,operador2,valor2){
+    if(operador1 == ">" || operador1 == ">="){
+        if(Number(valor1) <= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador1 == "<" || operador1 == "<="){
+        if(Number(valor1) >= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == ">" || operador2 == ">="){
+        if(Number(valor2) <= Number(valor1)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == "<" || operador2 == "<="){
+        if(Number(valor2) >= Number(valor1)){
+            return true
+        }
+        return false
+    }
+}
+
+$('#modal_probabilidad_riesgo_escenario_1  #btn_add_row_formula').click(function(){
+    console.log('aqui prob')
+
+    let number_item = $('#modal_probabilidad_riesgo_escenario_1 .group_formula').length + 1
+    $('#modal_probabilidad_riesgo_escenario_1 #group_condicionales_formula').append(`
+        <div class="row group_formula mt-2 group_formula_${number_item}">
+            <div class="col-md-3">
+                <select id="operador_formula_1" class="form-control form-control-sm">
+                    <option value="=">=</option>
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" id="value_formula_1" class="form-control form-control-sm"/>
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+            </div>
+            <div class="col-md-3">
+                <button onclick="delete_row_formula_prob(this)" index=${number_item} type="button" class="form-control form-control-sm" id="btn_delete_row_formula">X</button>
+            </div>
+        </div>
+    `)
+})
+
+function delete_row_formula_prob(arg){
+    let number_item = $(arg).attr('index')
+    console.log(number_item)
+    $('#modal_probabilidad_riesgo_escenario_1 .group_formula_'+number_item).remove()
 }

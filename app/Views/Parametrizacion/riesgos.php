@@ -1,6 +1,5 @@
 <?=$this->extend('Layout/main')?> 
 <?=$this->section('content')?>
-<link rel="stylesheet" href="<?=base_url('public/assets/css/riesgos/styles.css'); ?>">
     <div class="row">
         <div class="col-md-4 col-12">
             <div class="card">
@@ -618,9 +617,31 @@
                                     </div>
                                 </div>
                                 <div class="col-12 formula_1_probabilidad" style="display: none;">
-                                    <div class="form-group">
-                                        <span>Formula: </span>
-                                        <textarea type="text" class="form-control form-control-sm" id="formula"></textarea>
+                                    <div class="form-group" id="group_condicionales_formula">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Formula: </span>
+                                            <div class="col-md-3 pr-0 pl-3">
+                                                <button type="button" class="form-control form-control-sm" id="btn_add_row_formula">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="row group_formula group_formula_1">
+                                            <div class="col-md-3">
+                                                <select id="operador_formula_1" class="form-control form-control-sm">
+                                                    <option value="=">=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" id="value_formula_1" class="form-control form-control-sm"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+                                            </div>
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -689,7 +710,6 @@
                                         <span>Operador 1: </span>
                                         <select required name="" id="operador_1" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -700,7 +720,7 @@
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 1: </span>
-                                        <input type="text" required id="valor_1" class="form-control form-control-sm">
+                                        <input type="number" required id="valor_1" class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-6">
@@ -708,7 +728,6 @@
                                         <span>Operador 2: </span>
                                         <select required name="" id="operador_2" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -719,7 +738,7 @@
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 2: </span>
-                                        <input type="text" id="valor_2" required class="form-control form-control-sm">
+                                        <input type="number" id="valor_2" required class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -798,9 +817,30 @@
                                     </div>
                                 </div>
                                 <div class="col-12 formula_1_probabilidad" style="display: none;">
-                                    <div class="form-group">
-                                        <span>Formula: </span>
-                                        <textarea type="text" class="form-control form-control-sm" id="formula"></textarea>
+                                    <div class="form-group" id="group_condicionales_formula">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Formula: </span>
+                                            <div class="col-md-3 pr-0 pl-3">
+                                                <button type="button" class="form-control form-control-sm" id="btn_add_row_formula">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="row group_formula group_formula_1">
+                                            <div class="col-md-3">
+                                                <select id="operador_formula_1" class="form-control form-control-sm">
+                                                    <option value="=">=</option>
+                                                    <option value=">">></option>
+                                                    <option value=">=">>=</option>
+                                                    <option value="<"><</option>
+                                                    <option value="<="><=</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" id="value_formula_1" class="form-control form-control-sm"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -869,7 +909,6 @@
                                         <span>Operador 1: </span>
                                         <select required name="" id="operador_1" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -880,7 +919,7 @@
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 1: </span>
-                                        <input type="text" required id="valor_1" class="form-control form-control-sm">
+                                        <input type="number" required id="valor_1" class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-6">
@@ -888,7 +927,6 @@
                                         <span>Operador 2: </span>
                                         <select required name="" id="operador_2" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -899,7 +937,7 @@
                                 <div class="col-md-3 col-6">
                                     <div class="form-group">
                                         <span>Valor 2: </span>
-                                        <input type="text" id="valor_2" required class="form-control form-control-sm">
+                                        <input type="number" id="valor_2" required class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -941,7 +979,6 @@
                                         <span>Operador 1: </span>
                                         <select required name="" id="operador_1" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -952,7 +989,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Valor 1: </span>
-                                        <input type="text" class="form-control form-control-sm" id="valor_1">
+                                        <input type="number" class="form-control form-control-sm" id="valor_1">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
@@ -960,7 +997,6 @@
                                         <span>Operador 2: </span>
                                         <select required name="" id="operador_2" class="form-control form-control-sm">
                                             <option value="">Seleccione</option>
-                                            <option value="=">=</option>
                                             <option value=">">></option>
                                             <option value=">=">>=</option>
                                             <option value="<"><</option>
@@ -971,7 +1007,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <span>Valor 2: </span>
-                                        <input type="text" class="form-control form-control-sm" id="valor_2">
+                                        <input type="number" class="form-control form-control-sm" id="valor_2">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">

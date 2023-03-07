@@ -126,4 +126,16 @@ public function getDataMatriz(){
     }
   }
 }
+  public function getValoracionByProbabilidadImpacto(){
+    if($this->session->logged_in){
+    
+      $post_endpoint = '/api/getValoracionByProbabilidadImpacto';
+   
+      $request_data = $this->request->getPost();
+
+      $response = (perform_http_request('POST', REST_API_URL . $post_endpoint,$request_data));
+      echo json_encode($response);
+
+    }
+  }
 }

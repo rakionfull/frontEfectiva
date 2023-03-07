@@ -106,6 +106,9 @@ document.getElementById("btn_add_impacto_1").addEventListener('click',function()
     document.getElementById("form_impacto_riesgo_escenario_1").reset();
     document.getElementById("add_impacto_riego_escenario_1").style.display = "block";
     document.getElementById("update_impacto_riego_escenario_1").style.display = "none";
+    $('#modal_impacto_riesgo_escenario_1 #group_condicionales_formula .group_formula').remove()
+    $('#modal_impacto_riesgo_escenario_1 .formula_1_probabilidad').css('display','none')
+
 })
 document.getElementById('add_impacto_riego_escenario_1').addEventListener('click',function(){
     $descripcion = $('#modal_impacto_riesgo_escenario_1 #descripcion').val()
@@ -113,7 +116,21 @@ document.getElementById('add_impacto_riego_escenario_1').addEventListener('click
     $tipo_valor = $('#modal_impacto_riesgo_escenario_1 #tipo_valor').val()
     $estado = $('#modal_impacto_riesgo_escenario_1 #estado').val()
     $comentario = $('#modal_impacto_riesgo_escenario_1 #comentario').val()
-    $formula = $('#modal_impacto_riesgo_escenario_1 #formula').val()
+    $items_formula = $('#modal_impacto_riesgo_escenario_1 .group_formula ')
+    let formula = ''
+    if($items_formula.length > 0){
+        $items_formula.map((index,element) => {
+            let operador = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #operador_formula_1`).val()
+            let valor = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #value_formula_1`).val()
+            let resultado = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #resultado_formula_1`).val()
+            if(index == 0){            
+                formula = formula + (operador+' '+valor+' '+resultado)
+            }else{
+                formula = formula + ' '+ (operador+' '+valor+' '+resultado)
+            }
+        });
+    }
+    console.log(formula)
     let activesProb = 0
     let activesImpacto = 0
     if(
@@ -129,7 +146,7 @@ document.getElementById('add_impacto_riego_escenario_1').addEventListener('click
             tipo_valor:$tipo_valor,
             estado:$estado,
             comentario:$comentario,
-            formula:$formula
+            formula:formula
         }
         $.ajax({
             method:'POST',
@@ -206,12 +223,48 @@ $('#table_impacto_1 tbody').on('click','editImpacto1',function(){
     document.getElementById("form_impacto_riesgo_escenario_1").reset();
     document.getElementById("add_impacto_riego_escenario_1").style.display = "none";
     document.getElementById("update_impacto_riego_escenario_1").style.display = "block";
+    $('#modal_impacto_riesgo_escenario_1 .formula_1_probabilidad').css('display','none')
+
     //recuperando los datos
     var table = $('#table_impacto_1').DataTable();
     var regNum = table.rows( $(this).parents('tr') ).count().toString();
     var regDat = table.rows( $(this).parents('tr') ).data().toArray();
-    console.log(regNum)
-    console.log(this)
+    let formula = regDat[0]['formula']
+
+    if(regDat[0]["tipo_valor"] == "Formula"){
+        $('#modal_impacto_riesgo_escenario_1 .formula_1_probabilidad').css('display','block')
+        let split_formula = formula.split(" ")
+        let count = 1
+        if(split_formula.length > 0){
+            $('#modal_impacto_riesgo_escenario_1 #group_condicionales_formula .group_formula').remove()
+            for (let index = 0; index < split_formula.length; index=index+3) {
+                $('#modal_impacto_riesgo_escenario_1 #group_condicionales_formula').append(`
+                    <div class="row group_formula mt-2 group_formula_${count}">
+                        <div class="col-md-3">
+                            <select value="${split_formula[index]}" id="operador_formula_1" class="form-control form-control-sm">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                                <option value=">=">>=</option>
+                                <option value="<"><</option>
+                                <option value="<="><=</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input value="${split_formula[index+1]}" type="number" id="value_formula_1" class="form-control form-control-sm"/>
+                        </div>
+                        <div class="col-md-3">
+                            <input value="${split_formula[index+2]}" type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+                        </div>
+                        <div class="col-md-3">
+                            <button onclick="delete_row_formula_prob(this)" index=${count} type="button" class="form-control form-control-sm" id="btn_delete_row_formula">X</button>
+                        </div>
+                    </div>
+                `)
+                count++
+            }
+        }
+        console.log(split_formula)
+    }
     if (regNum == '0') {
         //console.log("error");
     }else{
@@ -230,7 +283,20 @@ $('#update_impacto_riego_escenario_1').click(function(){
     $tipo_valor = $('#modal_impacto_riesgo_escenario_1 #tipo_valor').val()
     $estado = $('#modal_impacto_riesgo_escenario_1 #estado').val()
     $comentario = $('#modal_impacto_riesgo_escenario_1 #comentario').val()
-    $formula = $('#modal_impacto_riesgo_escenario_1 #formula').val()
+    $items_formula = $('#modal_impacto_riesgo_escenario_1 .group_formula ')
+    let formula = ''
+    if($items_formula.length > 0){
+        $items_formula.map((index,element) => {
+            let operador = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #operador_formula_1`).val()
+            let valor = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #value_formula_1`).val()
+            let resultado = $(`#modal_impacto_riesgo_escenario_1 .group_formula_${index+1} #resultado_formula_1`).val()
+            if(index == 0){            
+                formula = formula + (operador+' '+valor+' '+resultado)
+            }else{
+                formula = formula + ' '+ (operador+' '+valor+' '+resultado)
+            }
+        });
+    }
     let activesProb = 0
     let activesImpacto = 0
     if(
@@ -247,7 +313,7 @@ $('#update_impacto_riego_escenario_1').click(function(){
             tipo_valor:$tipo_valor,
             estado:$estado,
             comentario:$comentario,
-            formula:$formula
+            formula:formula
         }
         $.ajax({
             method:'POST',
@@ -471,6 +537,26 @@ function loadTableImpacto2(){
 }
 
 document.getElementById("btn_add_impacto_2").addEventListener('click',function(){
+    $('#modal_impacto_riesgo_escenario_2 #operador_1 option').remove()
+    $('#modal_impacto_riesgo_escenario_2 #operador_1').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
+    $('#modal_impacto_riesgo_escenario_2 #operador_2 option').remove()
+    $('#modal_impacto_riesgo_escenario_2 #operador_2').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
     $('#modal_impacto_riesgo_escenario_2').modal('show')
     document.getElementById("title_impacto_riesgo_esc_2").innerHTML = "Agregar Impacto de Riesgo Escenario 2";
     document.getElementById("form_impacto_riesgo_escenario_2").reset();
@@ -501,77 +587,86 @@ document.getElementById('add_impacto_riego_escenario_2').addEventListener('click
         $valor_1 != "",
         $valor_2 != ""
     ){
-        const postData = {
-            descripcion: $descripcion,
-            tipo_regla:$tipo_regla,
-            tipo_valor:$tipo_valor,
-            estado:$estado,
-            comentario:$comentario,
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2
-        }
-        $.ajax({
-            method:'POST',
-            url:BASE_URL+"/main/addImpactoRiesgo2",
-            data:postData,
-            dataType:"JSON"
-        })
-        .done(function(respuesta){
-            console.log(respuesta)
-            if(!respuesta.error){
-                document.getElementById("form_impacto_riesgo_escenario_2").reset();
-                $('#modal_impacto_riesgo_escenario_2').modal('hide')
-                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha guardado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                $("#table_impacto_2").DataTable().ajax.reload(null, false);
-                let p1 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActives/2",
-                    dataType:'json'
-                })
-                .done(function(resp){
-                    activesProb = resp.data.length
-                })
-                let p2 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActivesImpacto/2",
-                    dataType:'json'
-                })
-                .done(function(res){
-                    activesImpacto = res.data.length
-                })
-                Promise.all([p1,p2]).then(resp => {
-                    if(activesImpacto > 0){
-                        activeScene2Impacto()
-                        escenario = 2
-                    }else{
-                        if(activesProb == 0){
-                            escenario = null
-                            noEsceneImpacto()
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
+
+            const postData = {
+                descripcion: $descripcion,
+                tipo_regla:$tipo_regla,
+                tipo_valor:$tipo_valor,
+                estado:$estado,
+                comentario:$comentario,
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2
+            }
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/main/addImpactoRiesgo2",
+                data:postData,
+                dataType:"JSON"
+            })
+            .done(function(respuesta){
+                console.log(respuesta)
+                if(!respuesta.error){
+                    document.getElementById("form_impacto_riesgo_escenario_2").reset();
+                    $('#modal_impacto_riesgo_escenario_2').modal('hide')
+                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha guardado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                    $("#table_impacto_2").DataTable().ajax.reload(null, false);
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/2",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/2",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(resp => {
+                        if(activesImpacto > 0){
+                            activeScene2Impacto()
+                            escenario = 2
+                        }else{
+                            if(activesProb == 0){
+                                escenario = null
+                                noEsceneImpacto()
+                            }
                         }
-                    }
-                })
-            }else{
+                    })
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: respuesta.msg
+                    }) 
+                }
+            })
+            .fail(function(error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: respuesta.msg
-                }) 
-            }
-        })
-        .fail(function(error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
             })
-        })
+        }else{
+            Swal.fire({
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
+            })
+        }
     }else{
         Swal.fire({
             icon: 'error',
@@ -582,6 +677,26 @@ document.getElementById('add_impacto_riego_escenario_2').addEventListener('click
 })
 
 $('#table_impacto_2 tbody').on('click','editImpacto2',function(){
+    $('#modal_impacto_riesgo_escenario_2 #operador_1 option').remove()
+    $('#modal_impacto_riesgo_escenario_2 #operador_1').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
+    $('#modal_impacto_riesgo_escenario_2 #operador_2 option').remove()
+    $('#modal_impacto_riesgo_escenario_2 #operador_2').append(
+        `
+            <option value="">Seleccione</option>
+            <option value=">">></option>
+            <option value=">=">>=</option>
+            <option value="<"><</option>
+            <option value="<="><=</option>
+        `
+    )
     $('#modal_impacto_riesgo_escenario_2').modal('show')
     document.getElementById("title_impacto_riesgo_esc_2").innerHTML = "Modificar Impacto de Riesgo Escenario 2";
     document.getElementById("form_impacto_riesgo_escenario_2").reset();
@@ -630,79 +745,88 @@ document.getElementById('update_impacto_riego_escenario_2').addEventListener('cl
         $valor_1 != "",
         $valor_2 != ""
     ){
-        const postData = {
-            id:$('#modal_impacto_riesgo_escenario_2 #id_impacto_riesgo').val(),
-            descripcion: $descripcion,
-            tipo_regla:$tipo_regla,
-            tipo_valor:$tipo_valor,
-            estado:$estado,
-            comentario:$comentario,
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2
-        }
-        $.ajax({
-            method:'POST',
-            url:BASE_URL+"/main/updateImpactoRiesgo2",
-            data:postData,
-            dataType:"JSON"
-        })
-        .done(function(respuesta){
-            console.log(respuesta)
-            if(!respuesta.error){
-                document.getElementById("form_impacto_riesgo_escenario_2").reset();
-                $('#modal_impacto_riesgo_escenario_2').modal('hide')
-                alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha modificado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                $("#table_impacto_2").DataTable().ajax.reload(null, false); 
-                let p1 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActives/2",
-                    dataType:'json'
-                })
-                .done(function(resp){
-                    activesProb = resp.data.length
-                })
-                let p2 = $.ajax({
-                    method:'get',
-                    url:BASE_URL+"/main/getActivesImpacto/2",
-                    dataType:'json'
-                })
-                .done(function(res){
-                    activesImpacto = res.data.length
-                })
-                Promise.all([p1,p2]).then(resp => {
-                    if(activesImpacto > 0){
-                        activeScene2Impacto()
-                        escenario = 2
-                    }else{
-                        if(activesProb == 0){
-                            escenario = null
-                            noEsceneImpacto()
-                        }
-                    }
-                })
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
 
-            }else{
+            const postData = {
+                id:$('#modal_impacto_riesgo_escenario_2 #id_impacto_riesgo').val(),
+                descripcion: $descripcion,
+                tipo_regla:$tipo_regla,
+                tipo_valor:$tipo_valor,
+                estado:$estado,
+                comentario:$comentario,
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2
+            }
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/main/updateImpactoRiesgo2",
+                data:postData,
+                dataType:"JSON"
+            })
+            .done(function(respuesta){
+                console.log(respuesta)
+                if(!respuesta.error){
+                    document.getElementById("form_impacto_riesgo_escenario_2").reset();
+                    $('#modal_impacto_riesgo_escenario_2').modal('hide')
+                    alerta_impacto_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha modificado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                    $("#table_impacto_2").DataTable().ajax.reload(null, false); 
+                    let p1 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActives/2",
+                        dataType:'json'
+                    })
+                    .done(function(resp){
+                        activesProb = resp.data.length
+                    })
+                    let p2 = $.ajax({
+                        method:'get',
+                        url:BASE_URL+"/main/getActivesImpacto/2",
+                        dataType:'json'
+                    })
+                    .done(function(res){
+                        activesImpacto = res.data.length
+                    })
+                    Promise.all([p1,p2]).then(resp => {
+                        if(activesImpacto > 0){
+                            activeScene2Impacto()
+                            escenario = 2
+                        }else{
+                            if(activesProb == 0){
+                                escenario = null
+                                noEsceneImpacto()
+                            }
+                        }
+                    })
+    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: respuesta.msg
+                    }) 
+                }
+            })
+            .fail(function(error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: respuesta.msg
-                }) 
-            }
-        })
-        .fail(function(error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                })
             })
-        })
+        }else{
+            Swal.fire({
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
+            })
+        }
     }else{
         Swal.fire({
             icon: 'error',
@@ -818,4 +942,110 @@ function activeScene2Impacto(){
     $('#impacto-2-tab-pane').addClass('active')
     $('#impacto-1-tab-pane').removeClass('show')
     $('#impacto-1-tab-pane').removeClass('active')
+}
+
+$('#modal_impacto_riesgo_escenario_2 #operador_1').change(function(){
+    let option =$('#modal_impacto_riesgo_escenario_2 #operador_1').val()
+    if(option == ">" || option == ">="){
+        $('#modal_impacto_riesgo_escenario_2 #operador_2 option').remove()
+        $('#modal_impacto_riesgo_escenario_2 #operador_2').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_impacto_riesgo_escenario_2 #operador_2 option').remove()
+            $('#modal_impacto_riesgo_escenario_2 #operador_2').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+$('#modal_impacto_riesgo_escenario_2 #operador_2').change(function(){
+    let option =$('#modal_impacto_riesgo_escenario_2 #operador_2').val()
+    if(option == ">" || option == ">="){
+        $('#modal_impacto_riesgo_escenario_2 #operador_1 option').remove()
+        $('#modal_impacto_riesgo_escenario_2 #operador_1').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_impacto_riesgo_escenario_2 #operador_1 option').remove()
+            $('#modal_impacto_riesgo_escenario_2 #operador_1').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+
+
+function validateOperators(operador1,valor1,operador2,valor2){
+    if(operador1 == ">" || operador1 == ">="){
+        if(Number(valor1) <= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador1 == "<" || operador1 == "<="){
+        if(Number(valor1) >= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == ">" || operador2 == ">="){
+        if(Number(valor2) <= Number(valor1)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == "<" || operador2 == "<="){
+        if(Number(valor2) >= Number(valor1)){
+            return true
+        }
+        return false
+    }
+}
+
+$('#modal_impacto_riesgo_escenario_1 #btn_add_row_formula').click(function(){
+    console.log('aqui impacto')
+    let number_item = $('#modal_impacto_riesgo_escenario_1 .group_formula').length + 1
+    $('#modal_impacto_riesgo_escenario_1 #group_condicionales_formula').append(`
+        <div class="row group_formula mt-2 group_formula_${number_item}">
+            <div class="col-md-3">
+                <select id="operador_formula_1" class="form-control form-control-sm">
+                    <option value="=">=</option>
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                    <option value="<"><</option>
+                    <option value="<="><=</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" id="value_formula_1" class="form-control form-control-sm"/>
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="resultado_formula_1" class="form-control form-control-sm"/>
+            </div>
+            <div class="col-md-3">
+                <button onclick="delete_row_formula_imp(this)" index=${number_item} type="button" class="form-control form-control-sm" id="btn_delete_row_formula">X</button>
+            </div>
+        </div>
+    `)
+})
+
+function delete_row_formula_imp(arg){
+    let number_item = $(arg).attr('index')
+    console.log(number_item)
+    $('#modal_impacto_riesgo_escenario_1 .group_formula_'+number_item).remove()
 }

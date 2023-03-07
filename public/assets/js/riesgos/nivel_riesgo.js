@@ -113,54 +113,62 @@ document.getElementById("add_nivel_riesgo").addEventListener('click',function(){
         $descripcion != "" &&
         $comentario != ""
     ){
-        const postData = { 
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2,
-            color:$color,
-            estado:$estado,
-            descripcion:$descripcion,
-            comentario:$comentario
-        };
-        try {
-            $.ajax({
-                method: "POST",
-                url: BASE_URL+"/main/addNivelRiesgo",
-                data: postData,
-                dataType: "JSON"
-            })
-            .done(function(respuesta) {
-                if (respuesta) 
-                {
-                    document.getElementById("form_nivel_riesgo").reset();
-                    $('#modal_nivel_riesgo').modal('hide');
-                    alerta_nivel_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha guardado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                    $("#table_nivel_riesgo").DataTable().ajax.reload(null, false); 
-                   
-                } 
-                
-            })
-            .fail(function(error) {
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
+            const postData = { 
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2,
+                color:$color,
+                estado:$estado,
+                descripcion:$descripcion,
+                comentario:$comentario
+            };
+            try {
+                $.ajax({
+                    method: "POST",
+                    url: BASE_URL+"/main/addNivelRiesgo",
+                    data: postData,
+                    dataType: "JSON"
+                })
+                .done(function(respuesta) {
+                    if (respuesta) 
+                    {
+                        document.getElementById("form_nivel_riesgo").reset();
+                        $('#modal_nivel_riesgo').modal('hide');
+                        alerta_nivel_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha guardado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                        $("#table_nivel_riesgo").DataTable().ajax.reload(null, false); 
+                       
+                    } 
+                    
+                })
+                .fail(function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    })
+                })
+                .always(function() {
+                });
+            }
+            catch(err) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
                 })
-            })
-            .always(function() {
-            });
-        }
-        catch(err) {
+            }
+        }else{
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
             })
         }
 
@@ -268,54 +276,62 @@ document.getElementById("update_nivel_riesgo").addEventListener("click", functio
         $descripcion != "" &&
         $comentario != ""
     ){
-        const postData = {
-            operador1:$operador_1,
-            valor1:$valor_1,
-            operador2:$operador_2,
-            valor2:$valor_2,
-            color:$color,
-            estado:$estado,
-            descripcion:$descripcion,
-            comentario:$comentario
-        };
-        try {
-            $.ajax({
-                method: "POST",
-                url: BASE_URL+"/main/updateNivelRiesgo/"+id,
-                data: postData,
-                dataType: "JSON"
-            })
-            .done(function(respuesta) {
-                if (respuesta) 
-                {
-                    document.getElementById("form_nivel_riesgo").reset();
-                    $('#modal_nivel_riesgo').modal('hide');
-                    alerta_nivel_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
-                    'Se ha modificado exitosamente'+
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
-                        '<span aria-hidden="true">&times;</span>'+
-                        '</button>'+
-                    '</div>';
-                    $("#table_nivel_riesgo").DataTable().ajax.reload(null, false); 
-                   
-                } 
-                
-            })
-            .fail(function(error) {
+        if(validateOperators($operador_1,$valor_1,$operador_2,$valor_2)){
+            const postData = {
+                operador1:$operador_1,
+                valor1:$valor_1,
+                operador2:$operador_2,
+                valor2:$valor_2,
+                color:$color,
+                estado:$estado,
+                descripcion:$descripcion,
+                comentario:$comentario
+            };
+            try {
+                $.ajax({
+                    method: "POST",
+                    url: BASE_URL+"/main/updateNivelRiesgo/"+id,
+                    data: postData,
+                    dataType: "JSON"
+                })
+                .done(function(respuesta) {
+                    if (respuesta) 
+                    {
+                        document.getElementById("form_nivel_riesgo").reset();
+                        $('#modal_nivel_riesgo').modal('hide');
+                        alerta_nivel_riesgo.innerHTML = '<div class="alert alert-success alert-dismissible fade show" role="alert">'+
+                        'Se ha modificado exitosamente'+
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+                            '<span aria-hidden="true">&times;</span>'+
+                            '</button>'+
+                        '</div>';
+                        $("#table_nivel_riesgo").DataTable().ajax.reload(null, false); 
+                       
+                    } 
+                    
+                })
+                .fail(function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                    })
+                })
+                .always(function() {
+                });
+            }
+            catch(err) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
                 })
-            })
-            .always(function() {
-            });
-        }
-        catch(err) {
+            }
+        }else{
             Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar, intente de nuevo. Si el problema persiste, contacte con el administrador del sistema.'
+                icon: 'warning',
+                title: 'Opps',
+                text: 'Esa combinatoria de operadores no es logica'
             })
         }
 
@@ -333,3 +349,76 @@ $('#modal_nivel_riesgo #comentario').on('input',function(){
     if (this.value.length > 2000) 
        this.value = this.value.slice(0,2000); 
 })
+
+$('#modal_nivel_riesgo #operador_1').change(function(){
+    let option =$('#modal_nivel_riesgo #operador_1').val()
+    if(option == ">" || option == ">="){
+        $('#modal_nivel_riesgo #operador_2 option').remove()
+        $('#modal_nivel_riesgo #operador_2').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_nivel_riesgo #operador_2 option').remove()
+            $('#modal_nivel_riesgo #operador_2').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+
+$('#modal_nivel_riesgo #operador_2').change(function(){
+    let option =$('#modal_nivel_riesgo #operador_2').val()
+    if(option == ">" || option == ">="){
+        $('#modal_nivel_riesgo #operador_1 option').remove()
+        $('#modal_nivel_riesgo #operador_1').append(
+            `
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            `
+        )
+    }else{
+        if(option == "<" || option == "<="){
+            $('#modal_nivel_riesgo #operador_1 option').remove()
+            $('#modal_nivel_riesgo #operador_1').append(
+                `
+                    <option value=">">></option>
+                    <option value=">=">>=</option>
+                `
+            )
+        }
+    }
+})
+
+function validateOperators(operador1,valor1,operador2,valor2){
+    if(operador1 == ">" || operador1 == ">="){
+        if(Number(valor1) <= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador1 == "<" || operador1 == "<="){
+        if(Number(valor1) >= Number(valor2)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == ">" || operador2 == ">="){
+        if(Number(valor2) <= Number(valor1)){
+            return true
+        }
+        return false
+    }
+    if(operador2 == "<" || operador2 == "<="){
+        if(Number(valor2) >= Number(valor1)){
+            return true
+        }
+        return false
+    }
+}
