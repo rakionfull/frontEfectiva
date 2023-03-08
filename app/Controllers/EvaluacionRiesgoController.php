@@ -68,6 +68,26 @@ class EvaluacionRiesgoController extends BaseController
             }
         }
     }
+    public function store_historial(){
+        if ($this->session->logged_in) {
+            if (!$this->request->getPost()) {
+                return redirect()->to(base_url('/evaluacion_riesgo'));
+            } else {
+                $currentDate = date("Y-m-d H:i:s");
+                $post_endpoint = '/api/addEvaluacionRiesgoHistorial';
+                $request_data = [];
+                $request_data = $this->request->getPost();
+                $request_data['id_user_added'] = $this->session->id;
+                $request_data['date_add'] = $currentDate;
+                $response = (perform_http_request('POST', REST_API_URL . $post_endpoint, $request_data));
+                if ($response) {
+                    echo json_encode($response);
+                } else {
+                    echo json_encode(false);
+                }
+            }
+        }
+    }
 
     public function update($id)
     {
@@ -144,6 +164,75 @@ class EvaluacionRiesgoController extends BaseController
                 $sheet->setCellValue('G' . $rows, $item->riesgo_controlado_impacto);
                 $sheet->setCellValue('H' . $rows, $item->riesgo_controlado_valor);
                 $sheet->setCellValue('I' . $rows, $item->estado == '1' ? 'Activo' : 'Inactivo');
+                $rows++;
+            }
+    
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($file_name);
+            return $this->response->download($file_name, null)->setFileName($file_name);
+
+        } catch (\Throwable $th) {
+            log_message('error','Error: '.$th->getMessage()." file ".$th->getFile()." Line ".$th->getLine());
+            //throw $th;
+        }
+    }
+    public function exportExcelEVAHistorial(){
+        try {
+            $data = [];
+            $get_endpoint = '/api/getListHistorial/';
+            $file_name = 'evaluacion_riesgo_historial.xlsx';
+            $response = perform_http_request('GET', REST_API_URL . $get_endpoint, []);
+            if ($response) {
+                $data = $response;
+            }
+
+            $spreadsheet = new Spreadsheet();
+
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Id');
+            $sheet->setCellValue('B1', 'Tipo Riesgo');
+            $sheet->setCellValue('C1', 'Empresa');
+            $sheet->setCellValue('D1', 'Area');
+            $sheet->setCellValue('E1', 'Unidad');
+            $sheet->setCellValue('F1', 'Macroproceso');
+            $sheet->setCellValue('G1', 'Proceso');
+            $sheet->setCellValue('H1', 'Activo');
+            $sheet->setCellValue('I1', 'Tipo de Amenaza');
+            $sheet->setCellValue('J1', 'Descripcion de Amenaza');
+            $sheet->setCellValue('K1', 'Tipo de Vulnerabilidad');
+            $sheet->setCellValue('L1', 'Descripcion de Vulnerabilidad');
+            $sheet->setCellValue('M1', 'Riesgo');
+            $sheet->setCellValue('N1', 'Riesgo Absoluto Probabilidad');
+            $sheet->setCellValue('O1', 'Riesgo Absoluto Impacto');
+            $sheet->setCellValue('P1', 'Riesgo Absoluto Valor');
+            $sheet->setCellValue('Q1', 'Riesgo Controlado Probabilidad');
+            $sheet->setCellValue('R1', 'Riesgo Controlado Impacto');
+            $sheet->setCellValue('S1', 'Riesgo Controlado Valor');
+            $sheet->setCellValue('T1', 'Fecha');
+            $rows = 2;
+            // var_dump($data->data);die();
+            foreach ($data->data as $item){
+                // var_dump($item);die();
+                $sheet->setCellValue('A' . $rows, $item->id);
+                $sheet->setCellValue('B' . $rows, $item->tipo_riesgo);
+                $sheet->setCellValue('C' . $rows, $item->empresa);
+                $sheet->setCellValue('D' . $rows, $item->area);
+                $sheet->setCellValue('E' . $rows, $item->unidad);
+                $sheet->setCellValue('F' . $rows, $item->macroproceso);
+                $sheet->setCellValue('G' . $rows, $item->proceso);
+                $sheet->setCellValue('H' . $rows, $item->activo);
+                $sheet->setCellValue('I' . $rows, $item->tipo_amenaza);
+                $sheet->setCellValue('J' . $rows, $item->descripcion_amenaza);
+                $sheet->setCellValue('K' . $rows, $item->tipo_vulnerabilidad);
+                $sheet->setCellValue('L' . $rows, $item->descripcion_vulnerabilidad);
+                $sheet->setCellValue('M' . $rows, $item->riesgo);
+                $sheet->setCellValue('N' . $rows, $item->probabilidad);
+                $sheet->setCellValue('O' . $rows, $item->impacto);
+                $sheet->setCellValue('P' . $rows, $item->valor);
+                $sheet->setCellValue('Q' . $rows, $item->riesgo_controlado_probabilidad);
+                $sheet->setCellValue('R' . $rows, $item->riesgo_controlado_impacto);
+                $sheet->setCellValue('S' . $rows, $item->riesgo_controlado_valor);
+                $sheet->setCellValue('T' . $rows, $item->date_add);
                 $rows++;
             }
     

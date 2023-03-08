@@ -1,30 +1,39 @@
 <?=$this->extend('Layout/main')?> 
 <?=$this->section('content')?>
+<div class="spinner-border" id="spinner_evaluacion" role="status" style="display:none;justify-content: center; align-items: center;">
+  <span class="visually-hidden"></span>
+</div>
 <link rel="stylesheet" href="<?=base_url('public/assets/css/evaluacion_riesgos.css'); ?>">
-    <div class="row">
+    <div class="row" id="apart_evaluacion">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row align-items-center justify-content-between">
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-4">
                             <h4 class="card-title">Lista de Evaluacion de Riesgos</h4>
                         </div>
-                        <div class="d-flex row col-md-8">
-                            <div class="col-md-2">
-                                <button type="button" id="btn_view_riesgos" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-info align-middle mr-2 ml-2"></i> Resumen</button>
-                            </div>
-                            <div class="col-md-4">
-                                <a href="<?= base_url('exportExcelEvaluacionHistoricos')?>"class="d-flex align-items-center float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-download align-middle mr-2 ml-2"></i> Export Historicos</a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="<?= base_url('exportExcelEVA')?>"class="d-flex align-items-center float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-download align-middle mr-2 ml-2"></i> Export</a>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="button" id="btn_add_evaluacion_riesgo" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
-                            </div>
-                        </div>
+                       
                         
                         <div class="col-12" style="margin-top:0.5rem" id="alerta_evaluacion_riesgo">
+                        </div>
+                    </div>
+                    <div class="row align-items-center justify-content-between">
+                        <div class="d-flex row col-12">
+                            <div class="col-12 col-md-2">
+                                <button type="button" id="btn_reload_valores" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light"><i class="fas fa-rotate align-middle mr-2 ml-2"></i> Actualizar</button>
+                            </div>
+                            <div class="col-12 col-md-2 ">
+                                <button type="button" id="btn_view_riesgos" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-info align-middle mr-2 ml-2"></i> Resumen</button>
+                            </div>
+                            <div class="col-12 col-md-4 ">
+                                <a href="<?= base_url('exportExcelEVAHistorial')?>"class="d-flex align-items-center float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-download align-middle mr-2 ml-2"></i> Export Historicos</a>
+                            </div>
+                            <div class="col-12 col-md-2 ">
+                                <a href="<?= base_url('exportExcelEVA')?>"class="d-flex align-items-center float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-download align-middle mr-2 ml-2"></i> Export</a>
+                            </div>
+                            <div class="col-12 col-md-2 ">
+                                <button type="button" id="btn_add_evaluacion_riesgo" class="d-flex align-items-center  float-right btn btn-primary waves-effect waves-light"><i class=" fas fa-plus-circle align-middle mr-2 ml-2"></i> Añadir</button>
+                            </div>
                         </div>
                     </div>
                     <?php 

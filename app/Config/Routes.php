@@ -438,9 +438,11 @@ $routes->set404Override();
     $routes->get('/countByValor','EvaluacionRiesgoController::countByValor');
     $routes->get('/listEvaluacionRiesgos','EvaluacionRiesgoController::getAll');
     $routes->post('/addEvaluacionRiesgo','EvaluacionRiesgoController::store');
+    $routes->post('/addEvaluacionRiesgoHistorial','EvaluacionRiesgoController::store_historial');
     $routes->post('/updateEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::update/$1');
     $routes->post('/deleteEvaluacionRiesgo/(:num)','EvaluacionRiesgoController::delete/$1');
     $routes->get('/exportExcelEVA','EvaluacionRiesgoController::exportExcelEVA');
+    $routes->get('/exportExcelEVAHistorial','EvaluacionRiesgoController::exportExcelEVAHistorial');
     $routes->post('/getValoracionByProbabilidadImpacto','ValoracionRiesgoController::getValoracionByProbabilidadImpacto');
 
 

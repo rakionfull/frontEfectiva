@@ -1455,3 +1455,686 @@ $('#btn_view_riesgos').click(function(){
 $('#button_close_modal_resumen,#button_cancel_modal_resumen').click(function(){
     $('#modal_evaluacion_resumen').modal('hide');
 })
+var valor = ''
+var id_probabilidad = 0
+var id_impacto = 0
+var probabilidad = ''
+var impacto = ''
+$('#btn_reload_valores').click(function(){
+    $.ajax({
+        url:BASE_URL+"/listEvaluacionRiesgos"
+    })
+    .done(function(respuesta){
+        respuesta = JSON.parse(respuesta)
+        console.log(respuesta)
+        if(respuesta.data.length > 0){
+            respuesta.data.map((item) => {
+                // Probabilidad
+                let value_probabilidad = item.valor_probabilidad;
+                let value_impacto = item.valor_impacto
+                if(escenario == 2){
+                    // PROBABILIDAD
+                    let probabilidad2 = $.ajax({
+                        method: "get",
+                        url: BASE_URL+"/main/getProbabilidadRiesgo/"+escenario,
+                        dataType: "JSON",
+                    })
+                    .done(function(respuesta) {
+                        let found = false
+                        respuesta.data.forEach(element => {
+                            if(!found){
+                                // OPERADOR 1
+                                if(element.operador1 == ">"){
+                                    if(element.operador2 == "<"){
+                                        if(value_probabilidad>element.valor1 && value_probabilidad<element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == "<="){
+                                        if(value_probabilidad>element.valor1 && value_probabilidad<=element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == ">="){
+                                    if(element.operador2 == "<"){
+                                        if(value_probabilidad>=element.valor1 && value_probabilidad<element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == "<="){
+                                        if(value_probabilidad>=element.valor1 && value_probabilidad<=element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == "<"){
+                                    if(element.operador2 == ">"){
+                                        if(value_probabilidad<element.valor1 && value_probabilidad>element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == ">="){
+                                        if(value_probabilidad<element.valor1 && value_probabilidad>=element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == "<="){
+                                    if(element.operador2 == ">"){
+                                        if(value_probabilidad<=element.valor1 && value_probabilidad>element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == ">="){
+                                        if(value_probabilidad<=element.valor1 && value_probabilidad>=element.valor2){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                // OPERADOR 2
+                                if(element.operador2 == ">"){
+                                    if(element.operador1 == "<"){
+                                        if(value_probabilidad > element.valor2 && value_probabilidad<element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_probabilidad>element.valor && value_probabilidad<=element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == ">="){
+                                    if(element.operador1 == "<"){
+                                        if(value_probabilidad >= element.valor2 && value_probabilidad<element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_probabilidad>=element.valor && value_probabilidad<=element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == "<"){
+                                    if(element.operador1 == "<"){
+                                        if(value_probabilidad < element.valor2 && value_probabilidad<element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_probabilidad<element.valor && value_probabilidad<=element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == "<="){
+                                    if(element.operador1 == "<"){
+                                        if(value_probabilidad <= element.valor2 && value_probabilidad<element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_probabilidad <= element.valor && value_probabilidad<=element.valor1){
+                                            found = true
+                                            id_probabilidad = element.id
+                                            probabilidad = element.descripcion
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        
+                    })
+                    .fail(function(error) {
+                    })
+                    .always(function() {
+                    });
+
+                    // IMPACTO
+                    let impacto2 = $.ajax({
+                        method: "get",
+                        url: BASE_URL+"/main/getImpactoRiesgo/"+escenario,
+                        dataType: "JSON"
+                    })
+                    .done(function(respuesta) {
+                        let found = false
+                        respuesta.data.forEach(element => {
+                            if(!found){
+                                // OPERADOR 1
+                                if(element.operador1 == ">"){
+                                    if(element.operador2 == "<"){
+                                        if(value_impacto>element.valor1 && value_impacto<element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == "<="){
+                                        if(value_impacto>element.valor1 && value_impacto<=element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == ">="){
+                                    if(element.operador2 == "<"){
+                                        if(value_impacto>=element.valor1 && value_impacto<element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == "<="){
+                                        if(value_impacto>=element.valor1 && value_impacto<=element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == "<"){
+                                    if(element.operador2 == ">"){
+                                        if(value_impacto<element.valor1 && value_impacto>element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == ">="){
+                                        if(value_impacto<element.valor1 && value_impacto>=element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador1 == "<="){
+                                    if(element.operador2 == ">"){
+                                        if(value_impacto<=element.valor1 && value_impacto>element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador2 == ">="){
+                                        if(value_impacto<=element.valor1 && value_impacto>=element.valor2){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                // OPERADOR 2
+                                if(element.operador2 == ">"){
+                                    if(element.operador1 == "<"){
+                                        if(value_impacto > element.valor2 && value_impacto<element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_impacto>element.valor && value_impacto<=element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == ">="){
+                                    if(element.operador1 == "<"){
+                                        if(value_impacto >= element.valor2 && value_impacto<element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_impacto>=element.valor && value_impacto<=element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == "<"){
+                                    if(element.operador1 == "<"){
+                                        if(value_impacto < element.valor2 && value_impacto<element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_impacto<element.valor && value_impacto<=element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                                if(element.operador2 == "<="){
+                                    if(element.operador1 == "<"){
+                                        if(value_impacto <= element.valor2 && value_impacto<element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                    if(element.operador1 == "<="){
+                                        if(value_impacto <= element.valor && value_impacto<=element.valor1){
+                                            found = true
+                                            id_impacto = element.id
+                                            impacto = element.descripcion
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    })
+                    .fail(function(error) {
+                    })
+                    .always(function() {
+                    });
+
+                    Promise.all([probabilidad2,impacto2]).then(() => {
+                        let valoracion = $.ajax({
+                            method: "POST",
+                            url: BASE_URL+"/getValoracionByProbabilidadImpacto",
+                            data:{
+                                id_probabilidad:id_probabilidad,
+                                id_impacto:id_impacto
+                            },
+                            dataType: "JSON"
+                        })
+                        .done(function(respuesta){
+                            if(respuesta.data.length > 0){
+                                valor = respuesta.data[0].valor
+                            }
+                        })
+                        Promise.all([valoracion]).then(() => {
+                            updateData(item,probabilidad,impacto,valor)
+                        })
+                    })
+                    
+
+                }else{
+                    // escenario 1 probabilidad
+                    let probabilidad1 = $.ajax({
+                        method: "get",
+                        url: BASE_URL+"/main/getProbabilidadRiesgo/"+escenario,
+                        dataType: "JSON"
+                    })
+                    .done(function(respuesta){
+                        console.log(respuesta)
+                        if(respuesta.data.length > 0){
+                            if(respuesta.data[0].tipo_valor == 'Formula'){
+                                id_probabilidad = respuesta.data[0].id
+                                let formula = respuesta.data[0].formula
+                                let split_formula = formula.split(" ")
+                                for (let index = 0; index < split_formula.length; index=index+3) {
+                                    let operador = split_formula[index]
+                                    let valor = Number(split_formula[index+1])
+                                    let resultado = split_formula[index+2]
+                                    switch (operador) {
+                                        case '=':
+                                            if(value_probabilidad == valor){
+                                                probabilidad = resultado
+                                            }
+                                            break;
+                                        case '>':
+                                            if(value_probabilidad > valor){
+                                                probabilidad = resultado
+                                            }
+                                            break;
+                                        case '>=':
+                                            if(value_probabilidad >= valor){
+                                                probabilidad = resultado
+                                            }
+                                            break;
+                                        case '<':
+                                            if(value_probabilidad < valor){
+                                                probabilidad = resultado
+                                            }
+                                            break;
+                                        case '<=':
+                                            if(value_probabilidad <= valor){
+                                                probabilidad = resultado
+                                            }
+                                            break;
+                                    
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .fail(function(error) {
+                    })
+                    .always(function() {
+                    });
+
+                    // IMPACTO ESCENARIO 1
+                    let impacto1 = $.ajax({
+                        method: "get",
+                        url: BASE_URL+"/main/getImpactoRiesgo/"+escenario,
+                        dataType: "JSON"
+                    })
+                    .done(function(respuesta){
+                        if(respuesta.data.length > 0){
+                            if(respuesta.data[0].tipo_valor == 'Formula'){
+                                id_impacto = respuesta.data[0].id
+                                let formula = respuesta.data[0].formula
+                                let split_formula = formula.split(" ")
+                                for (let index = 0; index < split_formula.length; index=index+3) {
+                                    let operador = split_formula[index]
+                                    let valor = Number(split_formula[index+1])
+                                    let resultado = split_formula[index+2]
+                                    switch (operador) {
+                                        case '=':
+                                            if(value_impacto == valor){
+                                               impacto = resultado
+                                            }
+                                            break;
+                                        case '>':
+                                            if(value_impacto > valor){
+                                                impacto = resultado
+                                            }
+                                            break;
+                                        case '>=':
+                                            if(value_impacto >= valor){
+                                               impacto = resultado
+                                            }
+                                            break;
+                                        case '<':
+                                            if(value_impacto < valor){
+                                                impacto = resultado
+                                            }
+                                            break;
+                                        case '<=':
+                                            if(value_impacto <= valor){
+                                                impacto = resultado
+                                            }
+                                            break;
+                                    
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+            
+                        }
+                    })
+                    .fail(function(error) {
+                    })
+                    .always(function() {
+                    });
+
+                    Promise.all([probabilidad1,impacto1,]).then(() => {
+                        let valoracion_ajax = $.ajax({
+                            method: "POST",
+                            url: BASE_URL+"/getValoracionByProbabilidadImpacto",
+                            data:{
+                                id_probabilidad:id_probabilidad,
+                                id_impacto:id_impacto
+                            },
+                            dataType: "JSON"
+                        })
+                        .done(function(respuesta){
+                            if(respuesta.data.length > 0){
+                                valor = respuesta.data[0].valor
+                            }
+                        })
+                        Promise.all([valoracion_ajax]).then(()=>{
+                            // UPDATE DATOS
+                            updateData(item,probabilidad,impacto,valor)
+                        })
+                    })
+                }
+            })
+        }
+    })
+})
+function updateData(data,probabilidad,impacto,valor){
+    if(data.probabilidad != probabilidad || data.impacto != impacto || data.valor != valor){
+        const postDataHistorial = {
+            id_tipo_riesgo:data.id_tipo_riesgo,
+            id_empresa:data.id_empresa,
+            id_area:data.id_area,
+            id_unidad:data.id_unidad,
+            id_macroproceso:data.id_macroproceso,
+            id_proceso:data.id_proceso,
+            id_activo:data.id_activo,
+            id_tipo_amenaza:data.id_tipo_amenaza,
+            id_descripcion_amenaza:data.id_descripcion_amenaza,
+            id_tipo_vulnerabilidad:data.id_tipo_vulnerabilidad,
+            id_descripcion_vulnerabilidad:data.id_descripcion_vulnerabilidad,
+            riesgo:data.riesgo,
+            valor_probabilidad:data.valor_probabilidad,
+            probabilidad:data.probabilidad,
+            valor_impacto:data.valor_impacto,
+            impacto:data.impacto,
+            valor:data.valor,
+            id_control:data.id_control,
+            riesgo_controlado_probabilidad:data.riesgo_controlado_probabilidad,
+            riesgo_controlado_impacto:data.riesgo_controlado_impacto,
+            riesgo_controlado_valor:data.riesgo_controlado_valor,
+            estado:data.estado
+        }
+        try {
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/addEvaluacionRiesgoHistorial",
+                data:postDataHistorial,
+                dataType:"JSON"
+            })
+            .done(function(response){
+                console.log(response)
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        const postData = {
+            id_tipo_riesgo:data.id_tipo_riesgo,
+            id_empresa:data.id_empresa,
+            id_area:data.id_area,
+            id_unidad:data.id_unidad,
+            id_macroproceso:data.id_macroproceso,
+            id_proceso:data.id_proceso,
+            id_activo:data.id_activo,
+            id_tipo_amenaza:data.id_tipo_amenaza,
+            id_descripcion_amenaza:data.id_descripcion_amenaza,
+            id_tipo_vulnerabilidad:data.id_tipo_vulnerabilidad,
+            id_descripcion_vulnerabilidad:data.id_descripcion_vulnerabilidad,
+            riesgo:data.riesgo,
+            valor_probabilidad:data.valor_probabilidad,
+            probabilidad:probabilidad,
+            valor_impacto:data.valor_impacto,
+            impacto:impacto,
+            valor:valor,
+            id_control:data.id_control,
+            riesgo_controlado_probabilidad:data.riesgo_controlado_probabilidad,
+            riesgo_controlado_impacto:data.riesgo_controlado_impacto,
+            riesgo_controlado_valor:data.riesgo_controlado_valor,
+            estado:data.estado
+        }
+        try {
+            $.ajax({
+                method:'POST',
+                url:BASE_URL+"/updateEvaluacionRiesgo/"+data.id,
+                data:postData,
+                dataType:"JSON"
+            })
+            .done(function(response){
+                if(!response.error){
+                    document.getElementById('form_eva').reset()
+                    $("#table_evaluacion_riesgo").DataTable().ajax.reload(null, false);
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+function getNivelRiesgoMasivo(){
+    $.ajax({
+        method:"get",
+        url:BASE_URL+"/main/getNivelRiesgo",
+        dataType: "JSON"
+    })
+    .done(function(respuesta){
+        let found = false
+        respuesta.data.forEach(element => {
+            if(!found){
+                // OPERADOR 1
+                if(element.operador1 == ">"){
+                    if(element.operador2 == "<"){
+                        if(value>element.valor1 && value<element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador2 == "<="){
+                        if(value>element.valor1 && value<=element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador1 == ">="){
+                    if(element.operador2 == "<"){
+                        if(value>=element.valor1 && value<element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador2 == "<="){
+                        if(value>=element.valor1 && value<=element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador1 == "<"){
+                    if(element.operador2 == ">"){
+                        if(value<element.valor1 && value>element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador2 == ">="){
+                        if(value<element.valor1 && value>=element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador1 == "<="){
+                    if(element.operador2 == ">"){
+                        if(value<=element.valor1 && value>element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador2 == ">="){
+                        if(value<=element.valor1 && value>=element.valor2){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                // OPERADOR 2
+                if(element.operador2 == ">"){
+                    if(element.operador1 == "<"){
+                        if(value > element.valor2 && value<element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador1 == "<="){
+                        if(value>element.valor && value<=element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador2 == ">="){
+                    if(element.operador1 == "<"){
+                        if(value >= element.valor2 && value<element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador1 == "<="){
+                        if(value>=element.valor && value<=element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador2 == "<"){
+                    if(element.operador1 == "<"){
+                        if(value < element.valor2 && value<element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador1 == "<="){
+                        if(value<element.valor && value<=element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+                if(element.operador2 == "<="){
+                    if(element.operador1 == "<"){
+                        if(value <= element.valor2 && value<element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                    if(element.operador1 == "<="){
+                        if(value <= element.valor && value<=element.valor1){
+                            found = true
+                            valor = element.descripcion
+                        }
+                    }
+                }
+            }
+        });
+    })
+}
