@@ -246,11 +246,31 @@ class InventarioClasificacionActivosController extends BaseController
             $sheet->setCellValue('P1', 'Valoracion Disponibilidad');
             $sheet->setCellValue('Q1', 'Valor');
             $sheet->setCellValue('R1', 'Comentario');
-            $sheet->setCellValue('S1', 'Fecha');
+            $sheet->setCellValue('S1', 'Estado');
+            $sheet->setCellValue('T1', 'Fecha');
             $rows = 2;
             // var_dump($data->data);die();
             foreach ($data->data as $item){
                 // var_dump($item);die();
+                switch ($item->ica_estado) {
+                    case 1:
+                        $estado = 'Borrador';
+                        break;
+                    case 2:
+                        $estado = 'Registrado';
+                        break;
+                    case 3:
+                        $estado = 'Observado';
+                        break;
+                    case 4:
+                        $estado = 'Aprobado';
+                        break;
+                    case 5:
+                        $estado = 'Por Actualizar';
+                        break;
+                    default:
+                        break;
+                }
                 $sheet->setCellValue('A' . $rows, $item->ica_id);
                 $sheet->setCellValue('B' . $rows, $item->empresa);
                 $sheet->setCellValue('C' . $rows, $item->area);
@@ -269,7 +289,8 @@ class InventarioClasificacionActivosController extends BaseController
                 $sheet->setCellValue('P' . $rows, $item->val_d);
                 $sheet->setCellValue('Q' . $rows, $item->valor);
                 $sheet->setCellValue('R' . $rows, $item->ica_comentario);
-                $sheet->setCellValue('S' . $rows, $item->date_created);
+                $sheet->setCellValue('S' . $rows, $estado);
+                $sheet->setCellValue('T' . $rows, $item->date_created);
                 $rows++;
             }
     
